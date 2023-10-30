@@ -103,7 +103,7 @@ def findLumi(year, auto_lumi, infile_name, scouting):
       lumidir = lumis
     if auto_lumi:
         print(infile_name)
-        if "20UL16MiniAODv2" in infile_name:
+        if "20UL16" in infile_name:
             lumi = lumidir["2016"]
         elif "20UL17" in infile_name:
             lumi = lumidir["2017"]

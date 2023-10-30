@@ -1,0 +1,1282 @@
+INFO:root:--- proxy lifetime is 111.9 hours
+INFO:root:Running resubmission script from submit02.mit.edu
+INFO:root:Resubmission 0
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 111.92138888888888 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (358/1172) finished. 30.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (158/564) finished. 28.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (167/1117) finished. 15.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (220/1562) finished. 14.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (903/4415) finished. 20.5% complete[0m
+INFO:root:Submitting and moving files took 98 seconds
+INFO:root:Sleeping for 3502 seconds
+INFO:root:(0.97 hours)...
+INFO:root:Resubmission 1
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 110.92861111111111 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (366/1172) finished. 31.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (158/564) finished. 28.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (169/1117) finished. 15.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (220/1562) finished. 14.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (913/4415) finished. 20.7% complete[0m
+INFO:root:Submitting and moving files took 553 seconds
+INFO:root:Sleeping for 3047 seconds
+INFO:root:(0.85 hours)...
+INFO:root:Resubmission 2
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 109.92861111111111 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (369/1172) finished. 31.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (159/564) finished. 28.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (170/1117) finished. 15.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (220/1562) finished. 14.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (918/4415) finished. 20.8% complete[0m
+INFO:root:Submitting and moving files took 330 seconds
+INFO:root:Sleeping for 3270 seconds
+INFO:root:(0.91 hours)...
+INFO:root:Resubmission 3
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 108.92833333333333 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (372/1172) finished. 31.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (159/564) finished. 28.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (170/1117) finished. 15.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (221/1562) finished. 14.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (922/4415) finished. 20.9% complete[0m
+INFO:root:Submitting and moving files took 464 seconds
+INFO:root:Sleeping for 3136 seconds
+INFO:root:(0.87 hours)...
+INFO:root:Resubmission 4
+INFO:root:Removing all jobs...
+SECMAN:2007:Failed to end classad message.
+Couldn't find/remove all jobs of user "akanugan"
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 107.92277777777778 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (374/1172) finished. 31.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (160/564) finished. 28.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (171/1117) finished. 15.3% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (226/1562) finished. 14.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (931/4415) finished. 21.1% complete[0m
+INFO:root:Submitting and moving files took 670 seconds
+INFO:root:Sleeping for 2930 seconds
+INFO:root:(0.81 hours)...
+INFO:root:Resubmission 5
+INFO:root:Removing all jobs...
+SECMAN:2007:Failed to end classad message.
+Couldn't find/remove all jobs of user "akanugan"
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 106.91722222222222 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (375/1172) finished. 32.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (161/564) finished. 28.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (176/1117) finished. 15.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (232/1562) finished. 14.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (944/4415) finished. 21.4% complete[0m
+INFO:root:Submitting and moving files took 317 seconds
+INFO:root:Sleeping for 3283 seconds
+INFO:root:(0.91 hours)...
+INFO:root:Resubmission 6
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 105.9161111111111 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (376/1172) finished. 32.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (164/564) finished. 29.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (177/1117) finished. 15.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (234/1562) finished. 15.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (951/4415) finished. 21.5% complete[0m
+INFO:root:Submitting and moving files took 421 seconds
+INFO:root:Sleeping for 3179 seconds
+INFO:root:(0.88 hours)...
+INFO:root:Resubmission 7
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 104.91583333333334 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (377/1172) finished. 32.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (164/564) finished. 29.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (177/1117) finished. 15.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (235/1562) finished. 15.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 1
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (953/4415) finished. 21.6% complete[0m
+INFO:root:Submitting and moving files took 190 seconds
+INFO:root:Sleeping for 3410 seconds
+INFO:root:(0.95 hours)...
+INFO:root:Resubmission 8
+INFO:root:Removing all jobs...
+SECMAN:2007:Failed to end classad message.
+Couldn't find/remove all jobs of user "akanugan"
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 103.91027777777778 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (377/1172) finished. 32.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (166/564) finished. 29.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (177/1117) finished. 15.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (235/1562) finished. 15.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (955/4415) finished. 21.6% complete[0m
+INFO:root:Submitting and moving files took 421 seconds
+INFO:root:Sleeping for 3179 seconds
+INFO:root:(0.88 hours)...
+INFO:root:Resubmission 9
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 102.90916666666666 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (377/1172) finished. 32.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (166/564) finished. 29.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (177/1117) finished. 15.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan5_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (235/1562) finished. 15.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (955/4415) finished. 21.6% complete[0m
+INFO:root:All done
+INFO:root:--- proxy lifetime is 67.4 hours
+INFO:root:Running resubmission script from submit05.mit.edu
+INFO:root:Resubmission 0
+INFO:root:Removing all jobs...
+
+Couldn't find/remove all jobs of user "akanugan"
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 67.40944444444445 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 218 seconds
+INFO:root:Sleeping for 3382 seconds
+INFO:root:(0.94 hours)...
+INFO:root:Resubmission 1
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 66.355 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 919 seconds
+INFO:root:Sleeping for 2681 seconds
+INFO:root:(0.74 hours)...
+INFO:root:Resubmission 2
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 65.36972222222222 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 729 seconds
+INFO:root:Sleeping for 2871 seconds
+INFO:root:(0.8 hours)...
+INFO:root:Resubmission 3
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 64.36333333333333 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 737 seconds
+INFO:root:Sleeping for 2863 seconds
+INFO:root:(0.8 hours)...
+INFO:root:Resubmission 4
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 63.37222222222222 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 1
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 680 seconds
+INFO:root:Sleeping for 2920 seconds
+INFO:root:(0.81 hours)...
+INFO:root:Resubmission 5
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 62.356944444444444 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 324 seconds
+INFO:root:Sleeping for 3276 seconds
+INFO:root:(0.91 hours)...
+INFO:root:Resubmission 6
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 61.36 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 879 seconds
+INFO:root:Sleeping for 2721 seconds
+INFO:root:(0.76 hours)...
+INFO:root:Resubmission 7
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 60.352777777777774 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 989 seconds
+INFO:root:Sleeping for 2611 seconds
+INFO:root:(0.73 hours)...
+INFO:root:Resubmission 8
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 59.35527777777778 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:Submitting and moving files took 907 seconds
+INFO:root:Sleeping for 2693 seconds
+INFO:root:(0.75 hours)...
+INFO:root:Resubmission 9
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 58.35444444444445 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (652/1417) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 1
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (374/736) finished. 50.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (77/701) finished. 11.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (498/963) finished. 51.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (565/1798) finished. 31.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_IronMan6_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (1618/2954) finished. 54.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3784/8569) finished. 44.2% complete[0m
+INFO:root:All done
+INFO:root:--- proxy lifetime is 132.68416666666667 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (998/1417) finished. 70.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (528/736) finished. 71.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (349/701) finished. 49.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (728/963) finished. 75.6% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (1153/1798) finished. 64.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (2220/2954) finished. 75.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (5976/8569) finished. 69.7% complete[0m
+INFO:root:--- proxy lifetime is 76.95055555555555 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (1176/1417) finished. 83.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (606/736) finished. 82.3% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (525/701) finished. 74.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (840/963) finished. 87.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (1465/1798) finished. 81.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:--- proxy lifetime is 76.94583333333334 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (907/1172) finished. 77.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (2559/2954) finished. 86.6% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (450/564) finished. 79.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (7171/8569) finished. 83.7% complete[0m
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (855/1117) finished. 76.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1243/1562) finished. 79.6% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3455/4415) finished. 78.3% complete[0m
+INFO:root:--- proxy lifetime is 67.11416666666666 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016B-v2+RAW                                  
+INFO:root:[31m		 --> (1176/1417) finished. 83.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016B-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016C-v2+RAW                                  
+INFO:root:[31m		 --> (606/736) finished. 82.3% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016C-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016D-v2+RAW                                  
+INFO:root:[31m		 --> (525/701) finished. 74.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016D-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016F-v1+RAW                                  
+INFO:root:[31m		 --> (840/963) finished. 87.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016G-v1+RAW                                  
+INFO:root:[31m		 --> (1465/1798) finished. 81.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016G-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16_ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2016H-v1+RAW                                  
+INFO:root:[31m		 --> (2559/2954) finished. 86.6% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016H-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (7171/8569) finished. 83.7% complete[0m
+INFO:root:--- proxy lifetime is 115.5 hours
+INFO:root:Running resubmission script from submit08.mit.edu
+INFO:root:Resubmission 0
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 115.54694444444445 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (980/1172) finished. 83.6% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (479/564) finished. 84.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (939/1117) finished. 84.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1350/1562) finished. 86.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3748/4415) finished. 84.9% complete[0m
+INFO:root:Submitting and moving files took 31 seconds
+INFO:root:Sleeping for 3569 seconds
+INFO:root:(0.99 hours)...
+INFO:root:Resubmission 1
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 114.54666666666667 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1038/1172) finished. 88.6% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (512/564) finished. 90.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1002/1117) finished. 89.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1430/1562) finished. 91.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (3982/4415) finished. 90.2% complete[0m
+INFO:root:Submitting and moving files took 22 seconds
+INFO:root:Sleeping for 3578 seconds
+INFO:root:(0.99 hours)...
+INFO:root:Resubmission 2
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 113.54666666666667 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1072/1172) finished. 91.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (527/564) finished. 93.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1040/1117) finished. 93.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1475/1562) finished. 94.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (4114/4415) finished. 93.2% complete[0m
+INFO:root:Submitting and moving files took 16 seconds
+INFO:root:Sleeping for 3584 seconds
+INFO:root:(1.0 hours)...
+INFO:root:Resubmission 3
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 112.54666666666667 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1090/1172) finished. 93.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (538/564) finished. 95.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1069/1117) finished. 95.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1506/1562) finished. 96.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (4203/4415) finished. 95.2% complete[0m
+INFO:root:Submitting and moving files took 14 seconds
+INFO:root:Sleeping for 3586 seconds
+INFO:root:(1.0 hours)...
+INFO:root:Resubmission 4
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 111.54666666666667 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1112/1172) finished. 94.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (552/564) finished. 97.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1083/1117) finished. 97.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1523/1562) finished. 97.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (4270/4415) finished. 96.7% complete[0m
+INFO:root:Submitting and moving files took 11 seconds
+INFO:root:Sleeping for 3589 seconds
+INFO:root:(1.0 hours)...
+INFO:root:Resubmission 5
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 110.54638888888888 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1125/1172) finished. 96.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (554/564) finished. 98.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1092/1117) finished. 97.8% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1533/1562) finished. 98.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (4304/4415) finished. 97.5% complete[0m
+INFO:root:Submitting and moving files took 10 seconds
+INFO:root:Sleeping for 3590 seconds
+INFO:root:(1.0 hours)...
+INFO:root:Resubmission 6
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 109.54638888888888 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1137/1172) finished. 97.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (556/564) finished. 98.6% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1097/1117) finished. 98.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1539/1562) finished. 98.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (4329/4415) finished. 98.1% complete[0m
+INFO:root:Submitting and moving files took 9 seconds
+INFO:root:Sleeping for 3591 seconds
+INFO:root:(1.0 hours)...
+INFO:root:Resubmission 7
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 108.54666666666667 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1142/1172) finished. 97.4% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (559/564) finished. 99.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1100/1117) finished. 98.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1541/1562) finished. 98.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (4342/4415) finished. 98.3% complete[0m
+INFO:root:Submitting and moving files took 8 seconds
+INFO:root:Sleeping for 3592 seconds
+INFO:root:(1.0 hours)...
+INFO:root:Resubmission 8
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 107.54638888888888 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1145/1172) finished. 97.7% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (559/564) finished. 99.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1105/1117) finished. 98.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1545/1562) finished. 98.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (4354/4415) finished. 98.6% complete[0m
+INFO:root:Submitting and moving files took 9 seconds
+INFO:root:Sleeping for 3591 seconds
+INFO:root:(1.0 hours)...
+INFO:root:Resubmission 9
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 106.54638888888888 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017C-v1+RAW                                  
+INFO:root:[31m		 --> (1152/1172) finished. 98.3% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017C-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017D-v1+RAW                                  
+INFO:root:[31m		 --> (561/564) finished. 99.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017D-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017E-v1+RAW                                  
+INFO:root:[31m		 --> (1107/1117) finished. 99.1% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017E-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full17_ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:-- ScoutingPFHT+Run2017F-v1+RAW                                  
+INFO:root:[31m		 --> (1550/1562) finished. 99.2% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2017F-v1+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (4370/4415) finished. 99.0% complete[0m
+INFO:root:All done
+INFO:root:--- proxy lifetime is 138.3 hours
+INFO:root:Running resubmission script from submit07.mit.edu
+INFO:root:Resubmission 0
+INFO:root:Removing all jobs...
+
+Couldn't find/remove all jobs of user "akanugan"
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 138.265 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16tes1_ScoutingPFHT+Run2016E-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016E-v2+RAW                                  
+INFO:root:[31m		 --> (42/709) finished. 5.9% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016E-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (42/709) finished. 5.9% complete[0m
+INFO:root:Submitting and moving files took 21 seconds
+INFO:root:Sleeping for 3579 seconds
+INFO:root:(0.99 hours)...
+INFO:root:Resubmission 1
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 137.26444444444445 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16tes1_ScoutingPFHT+Run2016E-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016E-v2+RAW                                  
+INFO:root:[31m		 --> (252/709) finished. 35.5% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016E-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (252/709) finished. 35.5% complete[0m
+INFO:root:Submitting and moving files took 35 seconds
+INFO:root:Sleeping for 3565 seconds
+INFO:root:(0.99 hours)...
+INFO:root:Resubmission 2
+INFO:root:Removing all jobs...
+All jobs of user "akanugan" have been marked for removal
+INFO:root:Checking for corrupted files and removing them...
+INFO:root:Executing monitor.py ...
+INFO:root:--- proxy lifetime is 136.265 hours
+INFO:root:/work/submit/akanugan/SUEPCoffea_dask/logs/jobs_full16tes1_ScoutingPFHT+Run2016E-v2+RAW
+INFO:root:-- ScoutingPFHT+Run2016E-v2+RAW                                  
+INFO:root:[31m		 --> (326/709) finished. 46.0% complete[0m
+INFO:root:-- resubmitting files for /store/user/paus/nanosc/E06/ScoutingPFHT+Run2016E-v2+RAW
+INFO:root:condor submission status : 0
+INFO:root:
+INFO:root:
+INFO:root:TOTAL
+INFO:root:[31m	 --> (326/709) finished. 46.0% complete[0m
+INFO:root:Submitting and moving files took 13 seconds
+INFO:root:Sleeping for 3587 seconds
+INFO:root:(1.0 hours)...
+BB
