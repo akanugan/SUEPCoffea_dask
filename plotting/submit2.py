@@ -33,9 +33,10 @@ slurm_script_template = """#!/bin/bash
 #SBATCH --error={log_dir}{sample}.err
 #SBATCH --time=02:00:00
 #SBATCH --mem=2GB
-#SBATCH --partition=submit
+#SBATCH --partition=submit-gpu1080
 
 source ~/.bashrc
+export X509_USER_PROXY=/home/submit/{user}/{proxy} 
 conda activate SUEP
 cd {work_dir}
 {cmd}
@@ -108,10 +109,10 @@ parser.add_argument("--scouting", type=int, default=1, help="Is this scouting or
 parser.add_argument("--doInf", type=int, default=0, help="make GNN plots")
 parser.add_argument("--doSyst", type=int, default=0, help="make systematic plots")
 parser.add_argument(
-    "--doABCD", type=int, default=0, help="make plots for each ABCD+ region"
+    "--doABCD", type=int, default=1, help="make plots for each ABCD+ region"
 )
 parser.add_argument(
-    "--predictSR", type=int, default=0, help="Predict SR using ABCD method."
+    "--predictSR", type=int, default=1, help="Predict SR using ABCD method."
 )
 parser.add_argument(
     "--blind", type=int, default=1, help="Blind the data (default=True)"
@@ -143,7 +144,9 @@ elif options.method == "multithread":
     os.system(f"mkdir {work_dir}")
     os.system(f"cp -R ../* {work_dir}/.")
     print("Working in", work_dir)
-    pool = Pool(min(multiprocessing.cpu_count(), 40), maxtasksperchild=1000)
+    pool = Pool(
+        min([multiprocessing.cpu_count(), 40, len(samples)]), maxtasksperchild=1000
+    )
     results = []
 
 # Read samples from input file
@@ -157,6 +160,8 @@ if options.xrootd:
 
 # Loop over samples
 for i, sample in enumerate(samples):
+    if "/" in sample:
+        sample = sample.split("/")[-1]
     if (
         os.path.isfile(
             f"/data/submit/{getpass.getuser()}/SUEP/outputs/{sample}_{options.output}.root"
@@ -198,7 +203,7 @@ for i, sample in enumerate(samples):
     elif options.method == "slurm":
         # Generate the SLURM script content
         slurm_script_content = slurm_script_template.format(
-            log_dir=log_dir, work_dir=work_dir, cmd=cmd, sample=sample
+            log_dir=log_dir, work_dir=work_dir, cmd=cmd, sample=sample, user = getpass.getuser(), proxy = f"x509up_u{os.getuid()}",
         )
 
         # Write the SLURM script to a file
