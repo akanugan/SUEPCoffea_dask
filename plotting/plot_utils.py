@@ -73,16 +73,36 @@ lumis_scouting = {
     "all": 16478+10845+34617+60686,
 }
 
+lumis_scouting = {
+    "2016_apv": 18843.384721292190552,
+    "2016": 16705.324242775104523,
+    "2017": 35718.640387367889404,
+    "2018": 58965.346247952011108,
+    "all": 18843.384721292190552
+    + 16705.324242775104523
+    + 35718.640387367889404
+    + 58965.346247952011108,
+}
 
-def lumiLabel(year):
+
+def lumiLabel(year, scouting=False):
+    if scouting:
+        lumidir = lumis_scouting
+    else:
+        lumidir = lumis
     if year in ["2017", "2018"]:
-        return round(lumis[year] / 1000, 1)
+        return round(lumidir[year] / 1000, 1)
     elif year == "2016":
-        return round((lumis[year] + lumis[year + "_apv"]) / 1000, 1)
+        return round((lumidir[year] + lumidir[year + "_apv"]) / 1000, 1)
     elif year == "all":
-        return round(lumis[year] / 1000, 1)
+        return round(lumidir[year] / 1000, 1)
 
 
+def findLumi(year, auto_lumi, infile_name, scouting):
+    if scouting:
+        lumidir = lumis_scouting
+    else:
+        lumidir = lumis
 def findLumi(year, auto_lumi, infile_name, scouting):
     if scouting:
       lumidir = lumis_scouting
@@ -91,6 +111,16 @@ def findLumi(year, auto_lumi, infile_name, scouting):
     if auto_lumi:
         print(infile_name)
         if "20UL16MiniAODv2" in infile_name:
+            lumi = lumidir["2016"]
+        elif "20UL17MiniAODv2" in infile_name:
+            lumi = lumidir["2017"]
+        elif "20UL16MiniAODAPVv2" in infile_name:
+            lumi = lumidir["2016_apv"]
+        elif "20UL18" in infile_name:
+            lumi = lumidir["2018"]
+        elif "SUEP-m" in infile_name:
+            lumi = lumidir["2018"]
+        elif "JetHT+Run" in infile_name and not scouting:
             lumi = lumidir["2016"]
         elif "20UL17" in infile_name:
             lumi = lumidir["2017"]
@@ -102,6 +132,12 @@ def findLumi(year, auto_lumi, infile_name, scouting):
             lumi = lumidir["2018"]
         elif "JetHT+Run" in infile_name and not scouting:
             lumi = 1
+        elif "ScoutingPFHT+Run" in infile_name and scouting:
+            lumi = 1
+        else:
+            raise Exception(
+                "I cannot find luminosity matched to file name: " + infile_name
+            )
         elif "ScoutingPFHT+Run" in infile_name and scouting: 
             lumi = 1
         else:
@@ -123,7 +159,7 @@ def getHistLists(plotDir, tag, filename):
     return hists
 
 
-def formatNaming(file):
+def formatSUEPNaming(file):
     tokens = file.split("_")
     temp = tokens[2]
     mS = tokens[3]
@@ -152,11 +188,8 @@ def fillSample(infile_name, plots, lumi):
         sample = "QCD_Pt"
 
         # include this block to import the QCD bins individually
-        temp_sample = infile_name.split("/")[-1].split(".pkl")[0]
-        if ".root" in infile_name:
-            plots[temp_sample] = openroot(infile_name)
-        elif ".pkl" in infile_name:
-            plots[temp_sample] = openpickle(infile_name)
+        temp_sample = infile_name.split("/")[-1].split(".root")[0]
+        plots[temp_sample] = openHistFile(infile_name)
         for plot in list(plots[temp_sample].keys()):
             plots[temp_sample][plot] = plots[temp_sample][plot] * lumi
 
@@ -164,25 +197,74 @@ def fillSample(infile_name, plots, lumi):
         sample = "QCD_HT"
 
         # include this block to import the HT bins individually
-        temp_sample = infile_name.split("/")[-1].split(".pkl")[0]
+        temp_sample = infile_name.split("/")[-1].split(".root")[0]
         temp_sample = temp_sample.split("QCD_HT")[1].split("_Tune")[0]
-        if ".root" in infile_name:
-            plots[temp_sample] = openroot(infile_name)
-        elif ".pkl" in infile_name:
-            plots[temp_sample] = openpickle(infile_name)
+        plots[temp_sample] = openHistFile(infile_name)
         for plot in list(plots[temp_sample].keys()):
             plots[temp_sample][plot] = plots[temp_sample][plot] * lumi
 
-    elif "TTJets" in infile_name:
-        sample = "TTJets"
+    elif any(
+        [
+            s in infile_name
+            for s in [
+                "TTJets",
+                "ttZJets",
+                "ttHTobb",
+                "ttHToNonbb",
+                "TTTo2L2Nu",
+                "TTToSemiLeptonic",
+                "TTWJetsToLNu",
+                "TTZToQQ",
+                "TTZToLLNuNu",
+            ]
+        ]
+    ):
+        sample = "TTBkg"
 
         # include this block to import the HT bins individually
-        temp_sample = infile_name.split("/")[-1].split(".pkl")[0]
+        temp_sample = infile_name.split("/")[-1].split(".root")[0]
         temp_sample = temp_sample.split("_Tune")[0]
-        if ".root" in infile_name:
-            plots[temp_sample] = openroot(infile_name)
-        elif ".pkl" in infile_name:
-            plots[temp_sample] = openpickle(infile_name)
+        plots[temp_sample] = openHistFile(infile_name)
+        for plot in list(plots[temp_sample].keys()):
+            plots[temp_sample][plot] = plots[temp_sample][plot] * lumi
+
+    elif any([s in infile_name for s in ["ST_t", "ST_tW"]]):
+        sample = "STBkg"
+
+        # include this block to import the HT bins individually
+        temp_sample = infile_name.split("/")[-1].split(".root")[0]
+        temp_sample = temp_sample.split("_Tune")[0]
+        plots[temp_sample] = openHistFile(infile_name)
+        for plot in list(plots[temp_sample].keys()):
+            plots[temp_sample][plot] = plots[temp_sample][plot] * lumi
+
+    elif "WJetsToLNu_HT" in infile_name:
+        sample = "WJetsToLNu_HT"
+
+        # include this block to import the HT bins individually
+        temp_sample = infile_name.split("/")[-1].split(".root")[0]
+        temp_sample = temp_sample.split("_Tune")[0]
+        plots[temp_sample] = openHistFile(infile_name)
+        for plot in list(plots[temp_sample].keys()):
+            plots[temp_sample][plot] = plots[temp_sample][plot] * lumi
+
+    elif "WJetsToLNu_Pt" in infile_name:
+        sample = "WJetsToLNu_Pt"
+
+        # include this block to import the HT bins individually
+        temp_sample = infile_name.split("/")[-1].split(".root")[0]
+        temp_sample = temp_sample.split("_Tune")[0]
+        plots[temp_sample] = openHistFile(infile_name)
+        for plot in list(plots[temp_sample].keys()):
+            plots[temp_sample][plot] = plots[temp_sample][plot] * lumi
+
+    elif "DYJetsToLL_LHEFilterPtZ-" in infile_name:
+        sample = "DYJetsToLL_LHEFilterPtZ"
+
+        # include this block to import the HT bins individually
+        temp_sample = infile_name.split("/")[-1].split(".root")[0]
+        temp_sample = temp_sample.split("_MatchEWPDG20")[0]
+        plots[temp_sample] = openHistFile(infile_name)
         for plot in list(plots[temp_sample].keys()):
             plots[temp_sample][plot] = plots[temp_sample][plot] * lumi
 
@@ -190,13 +272,10 @@ def fillSample(infile_name, plots, lumi):
         sample = "data"
 
         # include this block to import the eras bins individually
-        temp_sample = infile_name.split("/")[-1].split(".pkl")[0]
-        temp_sample = temp_sample.split("Run")[1].split("-UL")[0]
-        temp_sample = "data_" + temp_sample[4:]
-        if ".root" in infile_name:
-            plots[temp_sample] = openroot(infile_name)
-        elif ".pkl" in infile_name:
-            plots[temp_sample] = openpickle(infile_name)
+        temp_sample = infile_name.split("/")[-1].split(".root")[0]
+        temp_sample = temp_sample.split("+")[1].split("-")[0]
+        temp_sample = "data_" + temp_sample[3:]
+        plots[temp_sample] = openHistFile(infile_name)
         for plot in list(plots[temp_sample].keys()):
             plots[temp_sample][plot] = plots[temp_sample][plot] * lumi
 
@@ -204,7 +283,7 @@ def fillSample(infile_name, plots, lumi):
         if "+" in infile_name:  # historical naming convention
             sample = infile_name.split("/")[-1].split("+")[0]
         elif "GluGluToSUEP" in infile_name:  # private samples naming convention
-            sample = formatNaming(infile_name.split("/")[-1])
+            sample = formatSUEPNaming(infile_name.split("/")[-1])
         elif (
             "generic" in infile_name and "MS" in infile_name
         ):  # hack for Carlos naming convention
@@ -217,6 +296,9 @@ def fillSample(infile_name, plots, lumi):
 
 
 # load file(s)
+def loader(
+    infile_names, year=None, auto_lumi=False, exclude_low_bins=False, scouting=False
+):
 def loader(infile_names, year=None, auto_lumi=False, exclude_low_bins=False,scouting=False):
     plots = {}
     for infile_name in infile_names:
@@ -227,6 +309,7 @@ def loader(infile_names, year=None, auto_lumi=False, exclude_low_bins=False,scou
             continue
 
         # sets the lumi based on year
+        lumi = findLumi(year, auto_lumi, infile_name, scouting)
         lumi = findLumi(year, auto_lumi, infile_name,scouting)
         print(f'Lumi: {lumi}')
 
@@ -252,22 +335,27 @@ def loader(infile_names, year=None, auto_lumi=False, exclude_low_bins=False,scou
         sample, plots = fillSample(infile_name, plots, lumi)
 
         if sample not in list(plots.keys()):
-            if ".root" in infile_name:
-                infile = openroot(infile_name)
-            elif ".pkl" in infile_name:
-                infile = openpickle(infile_name)
-            plots[sample] = infile
+            plots[sample] = openHistFile(infile_name)
             for plot in list(plots[sample].keys()):
                 plots[sample][plot] = plots[sample][plot] * lumi
         else:
-            if ".root" in infile_name:
-                plotsToAdd = openroot(infile_name)
-            elif ".pkl" in infile_name:
-                plotsToAdd = openpickle(infile_name)
-            for plot in list(plotsToAdd.keys()):
-                plots[sample][plot] = plots[sample][plot] + plotsToAdd[plot] * lumi
+            plotsToAdd = openHistFile(infile_name)
+            try:
+                for plot in list(plotsToAdd.keys()):
+                    plots[sample][plot] = plots[sample][plot] + plotsToAdd[plot] * lumi
+            except KeyError:
+                print("WARNING: " + infile_name + " has a different set of plots")
+                continue
 
     return plots
+
+
+def openHistFile(infile_name):
+    if ".root" in infile_name:
+        infile = openroot(infile_name)
+    elif ".pkl" in infile_name:
+        infile = openpickle(infile_name)
+    return infile
 
 
 def combineMCSamples(plots, year, samples=["QCD_HT", "TTJets"]):
@@ -591,8 +679,8 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
     offset = 0
     mids = []
     for i, r in enumerate(regions):
-        h1 = plots[sample1][plot_label.replace("A_", r + "_")]
-        h2 = plots[sample2][plot_label.replace("A_", r + "_")]
+        h1 = plots[sample1][plot_label.replace("A_", r + "_")].copy()
+        h2 = plots[sample2][plot_label.replace("A_", r + "_")].copy()
 
         if density:
             h1 = h1 / h1.sum().value
@@ -604,7 +692,7 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
         x2 = x2[:-1]
 
         xmin1 = np.argwhere(y1 > 0)[0] if any(y1 > 0) else [len(x1)]
-        xmin2 = np.argwhere(y2 > 0)[0] if any(y2 > 0) else [len(x1)]
+        xmin2 = np.argwhere(y2 > 0)[0] if any(y2 > 0) else [len(x2)]
         xmax1 = np.argwhere(y1 > 0)[-1] if any(y1 > 0) else [0]
         xmax2 = np.argwhere(y2 > 0)[-1] if any(y2 > 0) else [0]
         xmin = min(np.concatenate((xmin1, xmin2)))
@@ -627,21 +715,28 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
         y1_errs = np.sqrt(h1.variances())
         y1_errs = y1_errs[xmin : xmax + 1]
         if i == 0:
+            print(sample1)
             ax1.step(x1, y1, color="midnightblue", label=sample1, where="mid")
         else:
             ax1.step(x1, y1, color="midnightblue", where="mid")
         ax1.errorbar(
-            x1, y1, yerr=y1_errs, color="maroon".upper(), fmt="", drawstyle="steps-mid"
+            x1,
+            y1,
+            yerr=y1_errs,
+            color="midnightblue".upper(),
+            fmt="",
+            drawstyle="steps-mid",
         )
 
         y2_errs = np.sqrt(h2.variances())
         y2_errs = y2_errs[xmin : xmax + 1]
         if i == 0:
+            print(sample2)
             ax1.step(x2, y2, color="maroon", label=sample2, where="mid")
         else:
             ax1.step(x2, y2, color="maroon", where="mid")
         ax1.errorbar(
-            x2, y2, yerr=y2_errs, color="blue".upper(), fmt="", drawstyle="steps-mid"
+            x2, y2, yerr=y2_errs, color="maroon".upper(), fmt="", drawstyle="steps-mid"
         )
 
         ax1.axvline(x2[0], ls="--", color="black")
@@ -734,6 +829,8 @@ def plot_all_regions(
             y_errs = np.sqrt(h.variances())
             y_errs = y_errs[xmin : xmax + 1]
             if i == 0:
+                if label == "I":
+                    label == "SR"
                 ax.step(x, y, color=getColor(sample), label=label, where="mid")
             else:
                 ax.step(x, y, color=getColor(sample), where="mid")

@@ -38,6 +38,8 @@ python3 {condor_file} --jobNum=$1 --isMC={ismc} --era={era} --doInf={doInf} --do
 echo "xrdcp {outfile}.{file_ext} {redirector}/{outdir}/$3.{file_ext}"
 xrdcp {outfile}.{file_ext} {redirector}/{outdir}/$3.{file_ext}
 
+{extras}
+
 echo "rm *.{file_ext}"
 rm *.{file_ext}
 
@@ -48,7 +50,7 @@ echo " ------ THE END (everyone dies !) ----- "
 condor_TEMPLATE = """
 universe              = vanilla
 request_disk          = 2GB
-request_memory        = 3GB
+request_memory        = 5GB
 #request_cpus          = 1
 executable            = {jobdir}/script.sh
 arguments             = $(ProcId) $(jobid) $(fileid)
@@ -109,6 +111,9 @@ def main():
         "-ML", "--ML", type=int, default=0, help="ML samples production."
     )
     parser.add_argument(
+        "-WH", "--WH", type=int, default=0, help="WH ntuples production."
+    )
+    parser.add_argument(
         "-cutflow", "--cutflow", type=int, default=0, help="Cutflow analyzer."
     )
     parser.add_argument("-q", "--queue", type=str, default="espresso", help="")
@@ -118,6 +123,9 @@ def main():
     )
     parser.add_argument(
         "-dry", "--dryrun", action="store_true", help="running without submission"
+    )
+    parser.add_argument(
+        "-m", "--maxFiles", type=int, default=-1, help="maximum number of files"
     )
     parser.add_argument("--redo-proxy", action="store_true", help="redo the voms proxy")
 
@@ -151,10 +159,10 @@ def main():
         condor_file = "condor_ML.py"
         outfile = "out"
         file_ext = "hdf5"
-    elif options.cutflow == 1:
-        condor_file = "condor_SUEP_cutflow.py"
-        outfile = "output"
-        file_ext = "coffea"
+    elif options.WH == 1:
+        condor_file = "condor_SUEP_WH.py"
+        outfile = "out"
+        file_ext = "hdf5"
     else:
         condor_file = "condor_SUEP_WS.py"
         outfile = "out"
@@ -164,6 +172,8 @@ def main():
     lifetime = check_proxy(time_min=100)
     logging.info(f"--- proxy lifetime is {round(lifetime, 1)} hours")
     proxy_copy = os.path.join(home_base, proxy_base)
+
+    missing_samples = []
 
     with open(options.input) as stream:
         for sample in stream.read().split("\n"):
@@ -192,45 +202,45 @@ def main():
             else:
                 os.mkdir(jobs_dir)
 
-            # ---- getting the list of file for the dataset (For Kraken these are stored in catalogues on T2)
-            if options.private == 1:
-                # some wrangling to get them in the same format as the RawFiles.00
-                if options.era == "2018" or options.era == "2017":
-                    userOwner = "bmaier/suep"
-                elif options.era == "2016" or options.era == "2016apv":
-                    userOwner = "cfreer/suep_correct"
-                else:
-                    sys.exit("Double check this.")
-                # get the filelist with xrootd (use same door to take advantage of caching and speed up the process)
+            # ---- getting the list of file for the dataset by xrdfs ls
+
+            if (options.era == "2018" or options.era == "2017") and options.private:
+                userOwner = "bmaier/suep"
                 sample_path = "/store/user/{}/official_private/{}/{}".format(
                     userOwner, options.era, sample_name
                 )
-                comm = subprocess.Popen(
-                    ["xrdfs", "root://xrootd5.cmsaf.mit.edu/", "ls", sample_path],
-                    stdout=subprocess.PIPE,
+            elif (
+                options.era == "2016" or options.era == "2016apv"
+            ) and options.private:
+                userOwner = "cfreer/suep_correct"
+                sample_path = "/store/user/{}/official_private/{}/{}".format(
+                    userOwner, options.era, sample_name
                 )
-                raw_input_list = comm.communicate()[0].decode("utf-8").split("\n")
-                Raw_list = []
-                for f in raw_input_list:
-                    if len(f) == 0:
-                        continue
-                    new_f = f"root://xrootd.cmsaf.mit.edu/{f} 0 0 1 1 1 1"
-                    Raw_list.append(new_f)
-            elif options.scout == 1:
-                if options.isMC:
-                    input_list = "/home/tier3/cmsprod/catalog/t2mit/nanosc/E07/{}/RawFiles.00".format(
-                        sample_name
-                    )
-                else:
-                    input_list = "/home/tier3/cmsprod/catalog/t2mit/nanosc/E06/{}/RawFiles.00".format(
-                        sample_name
-                    )
-                Raw_list = open(input_list)
+            elif not options.private and "/" in sample:
+                sample_path = sample
             else:
-                input_list = "/home/tier3/cmsprod/catalog/t2mit/nanosu/A02/{}/RawFiles.00".format(
-                    sample_name
-                )
-                Raw_list = open(input_list)
+                sys.exit("Double check this.")
+
+            # get the filelist with xrootd (use same door to take advantage of caching and speed up the process)
+            comm = subprocess.Popen(
+                ["xrdfs", "root://xrootd5.cmsaf.mit.edu/", "ls", sample_path],
+                stdout=subprocess.PIPE,
+            )
+            raw_input_list = comm.communicate()[0].decode("utf-8").split("\n")
+
+            if raw_input_list == [""]:
+                missing_samples.append(sample_name)
+
+            # limit to max number of files, if specified
+            if options.maxFiles > 0:
+                raw_input_list = raw_input_list[: options.maxFiles]
+
+            Raw_list = []
+            for f in raw_input_list:
+                if len(f) == 0:
+                    continue
+                new_f = f"root://xrootd.cmsaf.mit.edu/{f} 0 0 1 1 1 1"
+                Raw_list.append(new_f)
 
             # write list of files to inputfiles.dat
             nfiles = 0
@@ -250,6 +260,16 @@ def main():
 
             # write the executable we give to condor
             with open(os.path.join(jobs_dir, "script.sh"), "w") as scriptfile:
+                extras = ""
+                if options.cutflow:
+                    extras += """
+                    echo "xrdcp {outCutflow}.coffea {redirector}/{outdir}/$3_cutflow.coffea"
+                    xrdcp {outCutflow}.coffea {redirector}/{outdir}/$3_cutflow.coffea
+                    """.format(
+                        outdir=fin_outdir_condor,
+                        outCutflow="cutflow",
+                        redirector=redirector,
+                    )
                 script = script_TEMPLATE.format(
                     proxy=proxy_base,
                     ismc=options.isMC,
@@ -262,6 +282,7 @@ def main():
                     outfile=outfile,
                     file_ext=file_ext,
                     redirector=redirector,
+                    extras=extras,
                 )
                 scriptfile.write(script)
                 scriptfile.close()
@@ -302,6 +323,11 @@ def main():
             out, err = htc.communicate()
             exit_status = htc.returncode
             logging.info(f"condor submission status : {exit_status}")
+
+    if len(missing_samples) > 0:
+        logging.info("\nMissing samples:")
+        for s in missing_samples:
+            logging.info(s)
 
 
 if __name__ == "__main__":
