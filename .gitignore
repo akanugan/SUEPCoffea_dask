@@ -4,6 +4,7 @@
 *.dat
 *.pkl
 *.hdf5
+/logs/*
 
 # Checkpoints & cache directories
 .ipynb_checkpoints/
@@ -18,7 +19,6 @@ dask-report.html
 *.err
 *.out
 *.sub
-*.txt
 
 # Shell scripts (do we really want to exclude those???)
 *.sh

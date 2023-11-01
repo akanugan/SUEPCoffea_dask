@@ -28,27 +28,27 @@ def h5store(
     store.get_storer(gname).attrs.metadata = kwargs
 
 
-def save_dfs(self, dfs, df_names, fname):
-    # fname = "out.hdf5"
+def save_dfs(self, dfs, df_names, fname="out.hdf5", metadata=None):
     subdirs = []
     store = pd.HDFStore(fname)
     if self.output_location is not None:
         # pandas to hdf5
         for out, gname in zip(dfs, df_names):
-            if self.isMC:
-                metadata = dict(
-                    gensumweight=self.gensumweight,
-                    era=self.era,
-                    mc=self.isMC,
-                    sample=self.sample,
-                )
-                # metadata.update({gensumweight:self.gensumweight})
-            else:
-                metadata = dict(era=self.era, mc=self.isMC, sample=self.sample)
+            if metadata is None:
+                if self.isMC:
+                    metadata = dict(
+                        gensumweight=self.gensumweight,
+                        era=self.era,
+                        mc=self.isMC,
+                        sample=self.sample,
+                    )
+                else:
+                    metadata = dict(era=self.era, mc=self.isMC, sample=self.sample)
 
             store_fin = h5store(self, store, out, fname, gname, **metadata)
 
         store.close()
+
         dump_table(self, fname, self.output_location, subdirs)
     else:
         print("self.output_location is None")
@@ -105,8 +105,8 @@ def dump_table(
         if not os.path.samefile(local_file, destination):
             shutil.copy2(local_file, destination)
         else:
-            fname = "condor_" + fname
-            destination = os.path.join(location, os.path.join(merged_subdirs, fname))
-            shutil.copy2(local_file, destination)
+            # if the file already exists at the destination and is identical to what we are trying to copy, no need to copy it again
+            return
         assert os.path.isfile(destination)
+    # delete the local file after copying it
     pathlib.Path(local_file).unlink()
