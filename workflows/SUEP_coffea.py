@@ -139,18 +139,19 @@ class SUEP_cluster(processor.ProcessorABC):
                     trigger = events.HLT.PFHT1050 == 1
             events = events[trigger]
         else:
-            if self.era == "2016" or self.era == "2016apv":
-                trigger = (
-                    events.hltResult[:, 3] == 1
-                )  # require trigger DST_HT410_PFScouting_v2
-            elif self.era == "2017":
-                trigger = (
-                    events.hltResult[:, 5] == 1
-                )  # require trigger DST_HT410_PFScouting_v12
-            elif self.era == "2018":
-                trigger = (
-                    events.hltResult[:, 7] == 1
-                )  # require trigger DST_HT410_PFScouting_v16
+            # if self.era == "2016" or self.era == "2016apv":
+            #     trigger = (
+            #         events.hltResult[:, 3] == 1
+            #     )  # require trigger DST_HT410_PFScouting_v2
+            # elif self.era == "2017":
+            #     trigger = (
+            #         events.hltResult[:, 5] == 1
+            #     )  # require trigger DST_HT410_PFScouting_v12
+            # elif self.era == "2018":
+            #     trigger = (
+            #         events.hltResult[:, 7] == 1
+            #     )  # require trigger DST_HT410_PFScouting_v16
+            trigger = (events.scouting.trig == 1)
             events = events[trigger]
         return events
 

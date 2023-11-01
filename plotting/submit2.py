@@ -108,11 +108,12 @@ parser.add_argument("--scouting", type=int, default=1, help="Is this scouting or
 # some parameters you can toggle freely
 parser.add_argument("--doInf", type=int, default=0, help="make GNN plots")
 parser.add_argument("--doSyst", type=int, default=0, help="make systematic plots")
+parser.add_argument("--isSignal", type=int, help="Is this signal sample or not",default=0)
 parser.add_argument(
-    "--doABCD", type=int, default=1, help="make plots for each ABCD+ region"
+    "--doABCD", type=int, default=0, help="make plots for each ABCD+ region"
 )
 parser.add_argument(
-    "--predictSR", type=int, default=1, help="Predict SR using ABCD method."
+    "--predictSR", type=int, default=0, help="Predict SR using ABCD method."
 )
 parser.add_argument(
     "--blind", type=int, default=1, help="Blind the data (default=True)"
@@ -178,7 +179,7 @@ for i, sample in enumerate(samples):
         )
 
     elif options.code == "plot":
-        cmd = "python3 make_plots.py --dataset={sample} --tag={tag} --output={output_tag} --xrootd={xrootd} --weights={weights} --isMC={isMC} --era={era} --scouting={scouting} --merged={merged} --doInf={doInf} --doABCD={doABCD} --doSyst={doSyst} --blind={blind} --predictSR={predictSR} --save={save}".format(
+        cmd = "python3 make_plots.py --dataset={sample} --tag={tag} --output={output_tag} --xrootd={xrootd} --weights={weights} --isMC={isMC} --era={era} --scouting={scouting} --merged={merged} --doInf={doInf} --doABCD={doABCD} --doSyst={doSyst} --isSignal={isSignal} --blind={blind} --predictSR={predictSR} --save={save}".format(
             sample=sample,
             tag=options.tag,
             output_tag=options.output,
@@ -190,6 +191,7 @@ for i, sample in enumerate(samples):
             merged=options.merged,
             doInf=options.doInf,
             doABCD=options.doABCD,
+            isSignal=options.isSignal,
             doSyst=options.doSyst,
             blind=options.blind,
             predictSR=options.predictSR,

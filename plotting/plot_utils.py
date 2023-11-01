@@ -17,6 +17,15 @@ import uproot
 from sympy import diff, sqrt, symbols
 
 default_colors = {
+    "50to100": "cyan",
+    "100to200": "teal",
+    "200to300": "mediumturquoise",
+    "300to500": "lightskyblue",
+    "500to700": "steelblue",
+    "700to1000": "dodgerblue",
+    "1000to1500": "violet",
+    "1500to2000": "hotpink",
+    "2000toInf": "orange",
     "125": "cyan",
     "200": "blue",
     "300": "lightseagreen",
@@ -52,6 +61,10 @@ def getColor(sample):
     if "MC" in sample:
         return default_colors["MC"]
 
+    if "to" in sample:
+        for key in default_colors.keys():
+            if key in sample:
+                return default_colors[key]
     else:
         return None
 
@@ -66,29 +79,27 @@ lumis = {
 }
 
 lumis_scouting = {
-    "2016_apv": 16478,
-    "2016": 10845,
-    "2017": 34617,
-    "2018": 60686,
-    "all": 16478 + 10845 + 34617 + 60686,
-}
-
-lumis_scouting = {
-    "2016_apv": 16478,
-    "2016": 10845,
-    "2017": 34617,
-    "2018": 60686,
-    "all": 16478+10845+34617+60686,
+    "2016_apv": 18843.384721292190552,
+    "2016": 16705.324242775104523,
+    "2017": 35718.640387367889404,
+    "2018": 58965.346247952011108,
+    "all": 18843.384721292190552 + 16705.324242775104523 + 35718.640387367889404 + 58965.346247952011108,
 }
 
 
-def lumiLabel(year):
+def lumiLabel(year,scouting=False):
+    if scouting:
+      lumidir = lumis_scouting
+    else:
+      lumidir = lumis
     if year in ["2017", "2018"]:
-        return round(lumis_scouting[year] / 1000, 1)
+        return round(lumidir[year] / 1000, 1)
+    elif year == "2016apv":
+        return round(lumidir["2016_apv"] / 1000, 1)
     elif year == "2016":
-        return round((lumis_scouting[year] + lumis[year + "_apv"]) / 1000, 1)
+        return round((lumidir[year] + lumidir[year + "_apv"]) / 1000, 1)
     elif year == "all":
-        return round(lumis_scouting[year] / 1000, 1)
+        return round(lumidir[year] / 1000, 1)
 
 
 def findLumi(year, auto_lumi, infile_name, scouting):
@@ -96,18 +107,12 @@ def findLumi(year, auto_lumi, infile_name, scouting):
         lumidir = lumis_scouting
     else:
         lumidir = lumis
-def findLumi(year, auto_lumi, infile_name, scouting):
-    if scouting:
-      lumidir = lumis_scouting
-    else:
-      lumidir = lumis
     if auto_lumi:
-        print(infile_name)
-        if "20UL16" in infile_name:
+        if "20UL16" in infile_name and "preVFP" not in infile_name:
             lumi = lumidir["2016"]
         elif "20UL17" in infile_name:
             lumi = lumidir["2017"]
-        elif "20UL16MiniAODAPVv2" in infile_name:
+        elif "20UL16" in infile_name and "preVFP" in infile_name:
             lumi = lumidir["2016_apv"]
         elif "20UL18" in infile_name:
             lumi = lumidir["2018"]
@@ -607,8 +612,8 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
     offset = 0
     mids = []
     for i, r in enumerate(regions):
-        h1 = plots[sample1][plot_label.replace("A_", r + "_")]
-        h2 = plots[sample2][plot_label.replace("A_", r + "_")]
+        h1 = plots[sample1][plot_label.replace("A_", r + "_")].copy()
+        h2 = plots[sample2][plot_label.replace("A_", r + "_")].copy()
 
         if density:
             h1 = h1 / h1.sum().value
@@ -620,7 +625,7 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
         x2 = x2[:-1]
 
         xmin1 = np.argwhere(y1 > 0)[0] if any(y1 > 0) else [len(x1)]
-        xmin2 = np.argwhere(y2 > 0)[0] if any(y2 > 0) else [len(x1)]
+        xmin2 = np.argwhere(y2 > 0)[0] if any(y2 > 0) else [len(x2)]
         xmax1 = np.argwhere(y1 > 0)[-1] if any(y1 > 0) else [0]
         xmax2 = np.argwhere(y2 > 0)[-1] if any(y2 > 0) else [0]
         xmin = min(np.concatenate((xmin1, xmin2)))
@@ -643,21 +648,28 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
         y1_errs = np.sqrt(h1.variances())
         y1_errs = y1_errs[xmin : xmax + 1]
         if i == 0:
+            print(sample1)
             ax1.step(x1, y1, color="midnightblue", label=sample1, where="mid")
         else:
             ax1.step(x1, y1, color="midnightblue", where="mid")
         ax1.errorbar(
-            x1, y1, yerr=y1_errs, color="maroon".upper(), fmt="", drawstyle="steps-mid"
+            x1,
+            y1,
+            yerr=y1_errs,
+            color="midnightblue".upper(),
+            fmt="",
+            drawstyle="steps-mid",
         )
 
         y2_errs = np.sqrt(h2.variances())
         y2_errs = y2_errs[xmin : xmax + 1]
         if i == 0:
+            print(sample2)
             ax1.step(x2, y2, color="maroon", label=sample2, where="mid")
         else:
             ax1.step(x2, y2, color="maroon", where="mid")
         ax1.errorbar(
-            x2, y2, yerr=y2_errs, color="blue".upper(), fmt="", drawstyle="steps-mid"
+            x2, y2, yerr=y2_errs, color="maroon".upper(), fmt="", drawstyle="steps-mid"
         )
 
         ax1.axvline(x2[0], ls="--", color="black")
@@ -750,6 +762,8 @@ def plot_all_regions(
             y_errs = np.sqrt(h.variances())
             y_errs = y_errs[xmin : xmax + 1]
             if i == 0:
+                if label == "I":
+                    label == "SR"
                 ax.step(x, y, color=getColor(sample), label=label, where="mid")
             else:
                 ax.step(x, y, color=getColor(sample), where="mid")

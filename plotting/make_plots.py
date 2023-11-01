@@ -62,6 +62,7 @@ parser.add_argument("--merged", type=int, default=1, help="Use merged files")
 # some info about the files, highly encouraged to specify every time
 parser.add_argument("-e", "--era", type=str, help="era", required=True)
 parser.add_argument("--isMC", type=int, help="Is this MC or data", required=True)
+parser.add_argument("--isSignal", type=int, help="Is this signal sample or not",default=0)
 parser.add_argument("--scouting", type=int, default=0, help="Is this scouting or no")
 # some parameters you can toggle freely
 parser.add_argument("--doInf", type=int, default=0, help="make GNN plots")
@@ -127,15 +128,6 @@ if options.scouting:
             "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 50]],
             "selections": [["ht_JEC", ">", 560], ["ntracks", ">", 0]],
         },
-        # "ClusterSR": {
-        #    "input_method": "CL",
-        #    "xvar": "SUEP_S1_CL",
-        #    "xvar_regions": [0.5, 2.0],
-        #    "yvar": "SUEP_nconst_CL",
-        #    "yvar_regions": [50,70,90, 1000],
-        #    "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=",50]],
-        #    "selections": [["ht_JEC", ">", 560], ["ntracks", ">", 0]],
-        # },
         "ClusterInverted": {
             "input_method": "CL",
             "xvar": "ISR_S1_CL",
@@ -145,15 +137,6 @@ if options.scouting:
             "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 50]],
             "selections": [["ht_JEC", ">", 560], ["ntracks", ">", 0]],
         },
-        # "ClusterSRInverted": {
-        #    "input_method": "CL",
-        #    "xvar": "ISR_S1_CL",
-        #    "xvar_regions": [0.5, 2.0],
-        #    "yvar": "ISR_nconst_CL",
-        #    "yvar_regions": [50,70,90, 1000],
-        #    "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=",50]],
-        #    "selections": [["ht_JEC", ">", 560], ["ntracks", ">", 0]],
-        # },
     }
 else:
     config = {
@@ -722,6 +705,23 @@ def calculate_systematic(
                     df["event_weight"] *= df[syst]
                 else:
                     df["event_weight"] *= df["prefire_nom"]
+        else:
+            # 1) pileup weights
+            puweights, puweights_up, puweights_down = pileup_weight.pileup_weight(
+                options.era
+            )
+            pu = pileup_weight.get_pileup_weights(
+                df, syst, puweights, puweights_up, puweights_down
+            )
+            df["event_weight"] *= pu
+
+            # 2) TriggerSF weights
+            trigSF = triggerSF.get_scout_trigSF_weight(np.array(df["ht"]).astype(int), syst, options.era)
+            df["event_weight"] *= trigSF
+
+            # 3) PS weights
+            if "PSWeight" in syst and syst in df.keys():
+                df["event_weight"] *= df[syst]
 
         # 5) Higgs_pt weights
         if "mS125" in options.dataset:
@@ -812,7 +812,7 @@ else:
 # get cross section
 xsection = 1.0
 if options.isMC:
-    xsection = fill_utils.getXSection(options.dataset, options.era, SUEP=False)
+    xsection = fill_utils.getXSection(options.dataset, options.era, SUEP=bool(options.isSignal))
 
 # custom per region weights
 scaling_weights = None
@@ -924,7 +924,7 @@ if options.isMC and options.doSyst:
 
 # apply normalization
 if options.isMC:
-    print(xsection, total_gensumweight)
+    print("xsection",xsection, "total_gensumweight", total_gensumweight)
     output = fill_utils.apply_normalization(output, xsection / total_gensumweight)
 
 # Make ABCD expected histogram for signal region
@@ -959,7 +959,7 @@ if options.doABCD and options.blind and options.predictSR:
             output[hist_name], xregions, yregions, sum_var="x"
         )
 
-        output[f"I_{yvar}_{label_out}"] = SR_exp
+        output[f"I_{yvar}_{label_out}_exp"] = SR_exp
 
 if options.dataset:
     outFile = outDir + "/" + options.dataset + "_" + options.output

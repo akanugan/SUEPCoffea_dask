@@ -36,7 +36,7 @@ def get_trigSF_weight(
     return trigSF
 
 
-def get_scout_trigSF_weight(htarray, sys, era=18):
+def get_scout_trigSF_weight(htarray, sys, era="2018"):
     if "16" in era:
         scaleFactor = 1
     else:
@@ -52,4 +52,4 @@ def get_scout_trigSF_weight(htarray, sys, era=18):
             scaleFactor = scaleFactorNom - scaleFactorErr
         else:
             scaleFactor = scaleFactorNom
-        return scaleFactor
+    return scaleFactor
