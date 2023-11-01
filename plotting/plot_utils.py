@@ -705,7 +705,6 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
         y1_errs = y1_errs[xmin : xmax + 1]
         if i == 0:
             print(sample1)
-            print(sample1)
             ax1.step(x1, y1, color="midnightblue", label=sample1, where="mid")
         else:
             ax1.step(x1, y1, color="midnightblue", where="mid")
@@ -715,14 +714,8 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
             yerr=y1_errs,
             color="midnightblue".upper(),
             fmt="",
-            drawstyle="steps-mid",
-            x1,
-            y1,
-            yerr=y1_errs,
-            color="midnightblue".upper(),
-            fmt="",
-            drawstyle="steps-mid",
-        )
+            drawstyle="steps-mid"
+            )
 
         y2_errs = np.sqrt(h2.variances())
         y2_errs = y2_errs[xmin : xmax + 1]
@@ -733,7 +726,6 @@ def plot_ratio_regions(plots, plot_label, sample1, sample2, regions, density=Fal
         else:
             ax1.step(x2, y2, color="maroon", where="mid")
         ax1.errorbar(
-            x2, y2, yerr=y2_errs, color="maroon".upper(), fmt="", drawstyle="steps-mid"
             x2, y2, yerr=y2_errs, color="maroon".upper(), fmt="", drawstyle="steps-mid"
         )
 

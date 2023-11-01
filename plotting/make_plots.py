@@ -65,9 +65,6 @@ parser.add_argument("--isMC", type=int, help="Is this MC or data", required=True
 parser.add_argument(
     "--isSignal", type=int, help="Is this signal sample or not", default=0
 )
-parser.add_argument(
-    "--channel", type=str, help="Analysis channel: ggF, WH", required=True
-)
 parser.add_argument("--scouting", type=int, default=0, help="Is this scouting or no")
 # some parameters you can toggle freely
 parser.add_argument("--doInf", type=int, default=0, help="make GNN plots")
@@ -1274,11 +1271,9 @@ if options.doABCD and options.blind and options.predictSR:
         # Calculate SR from ABCD method
         # sum_var = 'x' corresponds to scaling F histogram
         SR, SR_exp = plot_utils.ABCD_9regions_errorProp(
-        SR, SR_exp = plot_utils.ABCD_9regions_errorProp(
             output[hist_name], xregions, yregions, sum_var="x"
         )
 
-        output[f"I_{yvar}_{label_out}_exp"] = SR_exp
         output[f"I_{yvar}_{label_out}_exp"] = SR_exp
 
 if options.dataset:
