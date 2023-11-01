@@ -4,6 +4,7 @@
 *.dat
 *.pkl
 *.hdf5
+/logs/*
 
 # Checkpoints & cache directories
 .ipynb_checkpoints/
