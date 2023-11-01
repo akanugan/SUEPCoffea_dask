@@ -66,14 +66,6 @@ lumis = {
 }
 
 lumis_scouting = {
-    "2016_apv": 16478,
-    "2016": 10845,
-    "2017": 34617,
-    "2018": 60686,
-    "all": 16478+10845+34617+60686,
-}
-
-lumis_scouting = {
     "2016_apv": 18843.384721292190552,
     "2016": 16705.324242775104523,
     "2017": 35718.640387367889404,
@@ -105,22 +97,11 @@ def findLumi(year, auto_lumi, infile_name, scouting):
         lumidir = lumis
 def findLumi(year, auto_lumi, infile_name, scouting):
     if scouting:
-      lumidir = lumis_scouting
+        lumidir = lumis_scouting
     else:
-      lumidir = lumis
+        lumidir = lumis
     if auto_lumi:
-        print(infile_name)
-        if "20UL16MiniAODv2" in infile_name:
-            lumi = lumidir["2016"]
-        elif "20UL17MiniAODv2" in infile_name:
-            lumi = lumidir["2017"]
-        elif "20UL16MiniAODAPVv2" in infile_name:
-            lumi = lumidir["2016_apv"]
-        elif "20UL18" in infile_name:
-            lumi = lumidir["2018"]
-        elif "SUEP-m" in infile_name:
-            lumi = lumidir["2018"]
-        elif "JetHT+Run" in infile_name and not scouting:
+        if "20UL16" in infile_name:
             lumi = lumidir["2016"]
         elif "20UL17" in infile_name:
             lumi = lumidir["2017"]
@@ -138,10 +119,6 @@ def findLumi(year, auto_lumi, infile_name, scouting):
             raise Exception(
                 "I cannot find luminosity matched to file name: " + infile_name
             )
-        elif "ScoutingPFHT+Run" in infile_name and scouting: 
-            lumi = 1
-        else:
-            raise Exception("I cannot find luminosity matched to file name: "+infile_name)
     if year and not auto_lumi:
         lumi = lumidir[str(year)]
     if year and auto_lumi:
@@ -296,9 +273,6 @@ def fillSample(infile_name, plots, lumi):
 
 
 # load file(s)
-def loader(
-    infile_names, year=None, auto_lumi=False, exclude_low_bins=False, scouting=False
-):
 def loader(infile_names, year=None, auto_lumi=False, exclude_low_bins=False,scouting=False):
     plots = {}
     for infile_name in infile_names:
