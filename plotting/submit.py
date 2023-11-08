@@ -36,8 +36,11 @@ slurm_script_template = """#!/bin/bash
 #SBATCH --partition=submit
 
 source ~/.bashrc
-conda activate SUEP
+export X509_USER_PROXY=/home/submit/{user}/{proxy}
 cd {work_dir}
+cd ..
+source setup.sh
+cd plotting/
 {cmd}
 """
 
@@ -71,11 +74,12 @@ parser.add_argument(
     "-m",
     "--method",
     type=str,
+    default="multithread",
     help="Which system to use (supported: 'multithread' or 'slurm')",
     required=True,
 )
 # These are the same as make_plots.py, and are passed straight through it
-parser.add_argument("-o", "--output", type=str, help="output tag", required=True)
+parser.add_argument("-o", "--output", type=str, help="output tag", required=False)
 parser.add_argument("-t", "--tag", type=str, help="production tag", required=True)
 parser.add_argument(
     "-i",
@@ -101,7 +105,7 @@ parser.add_argument(
 # optional: call it with --merged = 1 to append a /merged/ to the paths in options 2 and 3
 parser.add_argument("--merged", type=int, default=0, help="Use merged files")
 # some info about the files, highly encouraged to specify every time
-parser.add_argument("-e", "--era", type=str, help="era", required=True)
+parser.add_argument("-e", "--era", type=str, help="era", required=False)
 parser.add_argument("--isMC", type=int, help="Is this MC or data", required=True)
 parser.add_argument("--scouting", type=int, default=1, help="Is this scouting or no")
 # some parameters you can toggle freely
@@ -121,6 +125,9 @@ parser.add_argument(
     default="None",
     help="Pass the filename of the weights, e.g. --weights weights.npy",
 )
+parser.add_argument(
+    "--channel", type=str, help="Analysis channel: ggF, WH", required=True
+)
 options = parser.parse_args()
 
 
@@ -129,9 +136,18 @@ if options.method not in ["slurm", "multithread"]:
 
 # Set up where you're gonna work
 if options.method == "slurm":
-    work_dir = os.getcwd()
-    log_dir = "/work/submit/{}/SUEPCoffea_dask/logs/slurm_{}/".format(
-        os.environ["USER"], options.output
+    # Found it necessary to run on a space with enough memory
+    work_dir = "/work/submit/{}/dummy_directory{}".format(
+        getpass.getuser(), np.random.randint(0, 10000)
+    )
+    os.system(f"mkdir {work_dir}")
+    os.system(f"cp -R ../* {work_dir}/.")
+    print("Working in", work_dir)
+    work_dir += "/plotting/"
+    log_dir = "/work/submit/{}/SUEP/logs/slurm_{}_{}/".format(
+        os.environ["USER"],
+        options.code,
+        options.output if options.code == "plot" else options.tag,
     )
     if not os.path.isdir(log_dir):
         os.mkdir(log_dir)
@@ -143,7 +159,10 @@ elif options.method == "multithread":
     os.system(f"mkdir {work_dir}")
     os.system(f"cp -R ../* {work_dir}/.")
     print("Working in", work_dir)
-    pool = Pool(min(multiprocessing.cpu_count(), 40), maxtasksperchild=1000)
+    work_dir += "/plotting/"
+    pool = Pool(
+        min([multiprocessing.cpu_count(), 40, len(samples)]), maxtasksperchild=1000
+    )
     results = []
 
 # Read samples from input file
@@ -157,6 +176,8 @@ if options.xrootd:
 
 # Loop over samples
 for i, sample in enumerate(samples):
+    if "/" in sample:
+        sample = sample.split("/")[-1]
     if (
         os.path.isfile(
             f"/data/submit/{getpass.getuser()}/SUEP/outputs/{sample}_{options.output}.root"
@@ -168,12 +189,12 @@ for i, sample in enumerate(samples):
 
     # Code to execute
     if options.code == "merge":
-        cmd = "python3 merge_plots.py --tag={tag} --dataset={sample} --isMC={isMC}".format(
+        cmd = "suepRun merge_plots.py --tag={tag} --dataset={sample} --isMC={isMC}".format(
             tag=options.tag, sample=sample, isMC=options.isMC
         )
 
     elif options.code == "plot":
-        cmd = "python3 make_plots.py --dataset={sample} --tag={tag} --output={output_tag} --xrootd={xrootd} --weights={weights} --isMC={isMC} --era={era} --scouting={scouting} --merged={merged} --doInf={doInf} --doABCD={doABCD} --doSyst={doSyst} --blind={blind} --predictSR={predictSR} --save={save}".format(
+        cmd = "suepRun make_plots.py --dataset={sample} --tag={tag} --output={output_tag} --xrootd={xrootd} --weights={weights} --isMC={isMC} --era={era} --scouting={scouting} --merged={merged} --doInf={doInf} --doABCD={doABCD} --doSyst={doSyst} --blind={blind} --predictSR={predictSR} --save={save} --channel={channel}".format(
             sample=sample,
             tag=options.tag,
             output_tag=options.output,
@@ -189,16 +210,23 @@ for i, sample in enumerate(samples):
             blind=options.blind,
             predictSR=options.predictSR,
             save=options.save,
+            channel=options.channel,
+            id=os.getuid(),
         )
 
     # Method to execute the code with
     if options.method == "multithread":
-        results.append(pool.apply_async(call_process, (cmd, work_dir + "/plotting/")))
+        results.append(pool.apply_async(call_process, (cmd, work_dir)))
 
     elif options.method == "slurm":
         # Generate the SLURM script content
         slurm_script_content = slurm_script_template.format(
-            log_dir=log_dir, work_dir=work_dir, cmd=cmd, sample=sample
+            log_dir=log_dir,
+            work_dir=work_dir,
+            cmd=cmd,
+            sample=sample,
+            user=getpass.getuser(),
+            proxy=f"x509up_u{os.getuid()}",
         )
 
         # Write the SLURM script to a file

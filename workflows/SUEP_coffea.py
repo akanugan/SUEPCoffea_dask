@@ -25,7 +25,10 @@ from workflows.CMS_corrections.HEM_utils import jetHEMFilter
 from workflows.CMS_corrections.jetmet_utils import apply_jecs
 from workflows.CMS_corrections.PartonShower_utils import GetPSWeights
 from workflows.CMS_corrections.Prefire_utils import GetPrefireWeights
-from workflows.CMS_corrections.track_killing_utils import *  # track_killing
+from workflows.CMS_corrections.track_killing_utils import (
+    scout_track_killing,
+    track_killing,
+)
 
 # Set vector behavior
 vector.register_awkward()
@@ -140,18 +143,12 @@ class SUEP_cluster(processor.ProcessorABC):
             events = events[trigger]
         else:
             # if self.era == "2016" or self.era == "2016apv":
-            #     trigger = (
-            #         events.hltResult[:, 3] == 1
-            #     )  # require trigger DST_HT410_PFScouting_v2
+            #    trigger = events.hltResult[:,3] == 1 # require trigger DST_HT410_PFScouting_v2
             # elif self.era == "2017":
-            #     trigger = (
-            #         events.hltResult[:, 5] == 1
-            #     )  # require trigger DST_HT410_PFScouting_v12
+            #    trigger = events.hltResult[:,5] == 1 # require trigger DST_HT410_PFScouting_v12
             # elif self.era == "2018":
-            #     trigger = (
-            #         events.hltResult[:, 7] == 1
-            #     )  # require trigger DST_HT410_PFScouting_v16
-            trigger = (events.scouting.trig == 1)
+            #    trigger = events.hltResult[:,7] == 1 # require trigger DST_HT410_PFScouting_v16
+            trigger = events.scouting.trig == 1
             events = events[trigger]
         return events
 
@@ -244,20 +241,20 @@ class SUEP_cluster(processor.ProcessorABC):
 
     def getScoutingTracks(self, events):
         if "2016" in self.era:
-             Cands = ak.zip(
-                 {
-                     "pt": events.offlineTrack.pt,
-                     "eta": events.offlineTrack.eta,
-                     "phi": events.offlineTrack.phi,
-                     "mass": events.offlineTrack.mass,
-                 },
-                 with_name="Momentum4D",
-             )
-             cut = (
-                 (events.offlineTrack.pt >= 0.75)
-                 & (abs(events.offlineTrack.eta) <= 2.4)
-                 & (events.offlineTrack.quality == 1)
-             )
+            Cands = ak.zip(
+                {
+                    "pt": events.offlineTrack.pt,
+                    "eta": events.offlineTrack.eta,
+                    "phi": events.offlineTrack.phi,
+                    "mass": events.offlineTrack.mass,
+                },
+                with_name="Momentum4D",
+            )
+            cut = (
+                (events.offlineTrack.pt >= 0.75)
+                & (abs(events.offlineTrack.eta) <= 2.4)
+                & (events.offlineTrack.quality == 1)
+            )
         else:
             Cands = ak.zip(
                 {
@@ -371,7 +368,7 @@ class SUEP_cluster(processor.ProcessorABC):
     ):
         # select out ak4jets
         if self.scouting and "2016" in self.era:
-             ak4jets = self.jet_awkward(events.OffJet)
+            ak4jets = self.jet_awkward(events.OffJet)
         else:
             ak4jets = self.jet_awkward(events.Jet)
 
@@ -380,11 +377,8 @@ class SUEP_cluster(processor.ProcessorABC):
         if self.accum:
             if "dask" in self.accum:
                 prefix = "dask-worker-space/"
-        jets_c = apply_jecs(
-            self,
-            Sample=self.sample,
-            events=events,
-            prefix=prefix,
+        jets_c, met_c = apply_jecs(
+            self, Sample=self.sample, events=events, prefix=prefix
         )
         jet_HEM_Cut, _ = jetHEMFilter(self, jets_c, events.run)
         jets_c = jets_c[jet_HEM_Cut]
@@ -557,7 +551,6 @@ class SUEP_cluster(processor.ProcessorABC):
         else:
             tracks, Cleaned_cands = self.getTracks(events)
         looseElectrons, looseMuons = self.getLooseLeptons(events)
-
         if self.isMC and do_syst and self.scouting == 1:
             tracks = scout_track_killing(self, tracks)
             Cleaned_cands = scout_track_killing(self, Cleaned_cands)
