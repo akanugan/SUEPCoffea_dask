@@ -40,7 +40,7 @@ def get_scout_trigSF_weight(htarray, sys, era="2018"):
     if "16" in era:
         scaleFactor = 1
     else:
-        bins, trigwgts, wgterr = np.loadtxt(f"../data/trigSF/scout_trigSF_{era}.txt")
+        bins, trigwgts, wgterr = np.loadtxt(f"../data/trigSF/scout_trigSF_{era}.txt", delimiter=',')
         htbin = np.digitize(htarray, bins)
         trigwgts = np.insert(trigwgts, 0, 0)
         wgterr = np.insert(wgterr, 0, 0)

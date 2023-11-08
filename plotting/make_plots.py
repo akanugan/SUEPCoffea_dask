@@ -126,7 +126,7 @@ if options.scouting:
             "yvar": "SUEP_nconst_CL",
             "yvar_regions": [0, 18, 50, 1000],
             "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 50]],
-            "selections": [["ht_JEC", ">", 560], ["ntracks", ">", 0]],
+            "selections": [["ht_JEC", ">", 0], ["ntracks", ">", 0]],
         },
         "ClusterInverted": {
             "input_method": "CL",
@@ -135,7 +135,7 @@ if options.scouting:
             "yvar": "ISR_nconst_CL",
             "yvar_regions": [0, 18, 50, 1000],
             "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 50]],
-            "selections": [["ht_JEC", ">", 560], ["ntracks", ">", 0]],
+            "selections": [["ht_JEC", ">", 0], ["ntracks", ">", 0]],
         },
     }
 else:
@@ -448,36 +448,36 @@ def create_output_file(label, abcd, options):
     output.update(
         {
             f"ht_{label}": Hist.new.Reg(
-                100, 0, 10000, name=f"ht_{label}", label="HT"
+                50, 0, 3500, name=f"ht_{label}", label="HT"
             ).Weight(),
             f"ht_JEC_{label}": Hist.new.Reg(
-                100, 0, 10000, name=f"ht_JEC_{label}", label="HT JEC"
+                50, 0, 3500, name=f"ht_JEC_{label}", label="HT JEC"
             ).Weight(),
             f"ht_JEC_JER_up_{label}": Hist.new.Reg(
-                100,
+                50,
                 0,
-                10000,
+                3500,
                 name=f"ht_JEC_JER_up_{label}",
                 label="HT JEC up",
             ).Weight(),
             f"ht_JEC_JER_down_{label}": Hist.new.Reg(
-                100,
+                50,
                 0,
-                10000,
+                3500,
                 name=f"ht_JEC_JER_down_{label}",
                 label="HT JEC JER down",
             ).Weight(),
             f"ht_JEC_JES_up_{label}": Hist.new.Reg(
-                100,
+                50,
                 0,
-                10000,
+                3500,
                 name=f"ht_JEC_JES_up_{label}",
                 label="HT JEC JES up",
             ).Weight(),
             f"ht_JEC_JES_down_{label}": Hist.new.Reg(
-                100,
+                50,
                 0,
-                10000,
+                3500,
                 name=f"ht_JEC_JES_down_{label}",
                 label="HT JEC JES down",
             ).Weight(),
