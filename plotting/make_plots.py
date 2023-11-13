@@ -126,7 +126,7 @@ if options.scouting:
             "xvar_regions": [0.3, 0.34, 0.5, 2.0],
             "yvar": "SUEP_nconst_CL",
             "yvar_regions": [0, 18, 50, 1000],
-            "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 70]],
+            "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 50]],
             "selections": [["ht_JEC", ">", 560], ["ntracks", ">", 0]],
         },
        "ClusterInverted": {

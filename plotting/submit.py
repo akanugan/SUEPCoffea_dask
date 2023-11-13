@@ -33,12 +33,12 @@ slurm_script_template = """#!/bin/bash
 #SBATCH --error={log_dir}{sample}.err
 #SBATCH --time=02:00:00
 #SBATCH --mem=2GB
-#SBATCH --partition=submit
+#SBATCH --partition=submit1080
 
 source ~/.bashrc
 export X509_USER_PROXY=/home/submit/{user}/{proxy} 
 source activate env
-#conda activate SUEP # Change to your own environment setup
+conda activate SUEP # Change to your own environment setup
 cd {work_dir}
 {cmd}
 """
@@ -105,7 +105,7 @@ parser.add_argument("--merged", type=int, default=0, help="Use merged files")
 # some info about the files, highly encouraged to specify every time
 parser.add_argument("-e", "--era", type=str, help="era", required=True)
 parser.add_argument("--isMC", type=int, help="Is this MC or data", required=True)
-parser.add_argument("--scouting", type=int, default=0, help="Is this scouting or no")
+parser.add_argument("--scouting", type=int, default=1, help="Is this scouting or no")
 # some parameters you can toggle freely
 parser.add_argument("--doInf", type=int, default=0, help="make GNN plots")
 parser.add_argument("--doSyst", type=int, default=0, help="make systematic plots")
