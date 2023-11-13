@@ -33,12 +33,12 @@ slurm_script_template = """#!/bin/bash
 #SBATCH --error={log_dir}{sample}.err
 #SBATCH --time=02:00:00
 #SBATCH --mem=2GB
-#SBATCH --partition=submit1080
+#SBATCH --partition=submit-gpu1080
 
 source ~/.bashrc
 export X509_USER_PROXY=/home/submit/{user}/{proxy} 
-source activate env
-conda activate SUEP # Change to your own environment setup
+#source activate env
+conda activate SUEP
 cd {work_dir}
 {cmd}
 """
@@ -106,6 +106,7 @@ parser.add_argument("--merged", type=int, default=0, help="Use merged files")
 parser.add_argument("-e", "--era", type=str, help="era", required=True)
 parser.add_argument("--isMC", type=int, help="Is this MC or data", required=True)
 parser.add_argument("--scouting", type=int, default=1, help="Is this scouting or no")
+parser.add_argument("--isSignal", type=int, help="Is this signal sample or not",default=0)
 # some parameters you can toggle freely
 parser.add_argument("--doInf", type=int, default=0, help="make GNN plots")
 parser.add_argument("--doSyst", type=int, default=0, help="make systematic plots")
@@ -179,7 +180,7 @@ for i, sample in enumerate(samples):
         )
 
     elif options.code == "plot":
-        cmd = "python3 make_plots.py --dataset={sample} --tag={tag} --output={output_tag} --xrootd={xrootd} --weights={weights} --isMC={isMC} --era={era} --scouting={scouting} --merged={merged} --doInf={doInf} --doABCD={doABCD} --doSyst={doSyst} --blind={blind} --predictSR={predictSR} --save={save}".format(
+        cmd = "python3 make_plots.py --dataset={sample} --tag={tag} --output={output_tag} --xrootd={xrootd} --weights={weights} --isMC={isMC} --era={era} --scouting={scouting} --isSignal={isSignal} --merged={merged} --doInf={doInf} --doABCD={doABCD} --doSyst={doSyst} --blind={blind} --predictSR={predictSR} --save={save}".format(
             sample=sample,
             tag=options.tag,
             output_tag=options.output,
@@ -188,6 +189,7 @@ for i, sample in enumerate(samples):
             isMC=options.isMC,
             era=options.era,
             scouting=options.scouting,
+            isSignal=options.isSignal,
             merged=options.merged,
             doInf=options.doInf,
             doABCD=options.doABCD,
