@@ -519,8 +519,14 @@ def create_output_file(label, abcd, options):
                 name=f"ngood_ak4jets_{label}",
                 label="# ak4jets in Event",
             ).Weight(),
-            f"run_{label}": Hist.new.IntCategory(
-                runList_2018,
+            f"run_{label}": Hist.new.Reg(
+                #runList_2018,
+                #9914,
+                #315258.5,
+                #325172.5,
+                9411
+                297049.5,
+                306460.5,
                 name=f"run_{label}",
                 label="# Events in run",
             ).Weight(),
