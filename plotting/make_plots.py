@@ -135,7 +135,7 @@ if options.scouting:
             "xvar": "ISR_S1_CL",
             "xvar_regions": [0.3, 0.34, 0.5, 2.0],
             "yvar": "ISR_nconst_CL",
-            "yvar_regions": [0, 18, 35, 1000],
+            "yvar_regions": [0, 18, 50, 1000],
             "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 50]],
             "selections": [["ht", ">", 560], ["ntracks", ">", 0]],
         },
@@ -521,14 +521,21 @@ def create_output_file(label, abcd, options):
             ).Weight(),
             f"run_{label}": Hist.new.Reg(
                 #runList_2018,
-                #9914,
-                #315258.5,
-                #325172.5,
-                9411
-                297049.5,
-                306460.5,
+                9914,
+                315258.5,
+                325172.5,
+                #9411,
+                #297049.5,
+                #306460.5,
                 name=f"run_{label}",
                 label="# Events in run",
+            ).Weight(),
+            f"lumi_{label}": Hist.new.Reg(
+                2500,
+                0,
+                2500,
+                name=f"lumi_{label}",
+                label="lumisection",
             ).Weight(),
             
         }
