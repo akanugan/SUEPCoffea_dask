@@ -166,7 +166,7 @@ for i, sample in enumerate(samples):
         sample = sample.split("/")[-1]
     if (
         os.path.isfile(
-            f"/data/submit/{getpass.getuser()}/SUEP/outputs/{sample}_{options.output}.root"
+            f"/data/submit/jinw65/SUEP/outputs/{sample}_{options.output}.root"
         )
         and not options.force
     ):

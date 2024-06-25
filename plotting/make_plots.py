@@ -87,11 +87,14 @@ options = parser.parse_args()
 # Script Parameters
 ###################################################################################################################
 
-outDir = f"/data/submit/{getpass.getuser()}/SUEP/outputs/"
+#outDir = f"/data/submit/{getpass.getuser()}/SUEP/outputs/"
+outDir = f"/data/submit/akanugan/SUEP/outputs/"
 if options.save is not None and options.save != "None" and options != "none":
     outDir = options.save
 redirector = "root://submit50.mit.edu/"
 username = getpass.getuser()
+#username = 'jinw65'
+
 if os.path.isdir("/data/submit/cms/store/user/" + username):
     # define these if --xrootd 0
     dataDirLocal = "/data/submit//cms/store/user/{}/SUEP/{}/{}/".format(
@@ -104,8 +107,8 @@ if os.path.isdir("/data/submit/cms/store/user/" + username):
 elif os.path.isdir("/data/submit/" + username):
     # define these if --xrootd 0
     dataDirLocal = "/data/submit/{}/SUEP/{}/{}/".format(
-#        getpass.getuser(), options.tag, options.dataset
-        "akanugan", options.tag, options.dataset
+        getpass.getuser(), options.tag, options.dataset
+#        "jinw65", options.tag, options.dataset
     )
     # and these if --xrootd 1
     dataDirXRootD = "/{}/SUEP/{}/{}/".format(
@@ -817,6 +820,7 @@ output = {"labels": []}
 
 # get list of files
 username = getpass.getuser()
+#username = 'jinw65'
 if options.file:
     files = [options.file]
 elif options.xrootd:

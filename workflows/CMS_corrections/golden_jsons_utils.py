@@ -20,7 +20,8 @@ def applyGoldenJSON(self, events):
         )
     elif self.era == "2018":
         LumiJSON = lumi_tools.LumiMask(
-            "data/GoldenJSON/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"
+            #"data/GoldenJSON/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt"
+            "data/GoldenJSON/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON_removedL1MuonSeededRuns.txt"
         )
     else:
         print("No era is defined. Please specify the year")
