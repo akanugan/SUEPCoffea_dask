@@ -92,8 +92,8 @@ outDir = f"/data/submit/akanugan/SUEP/outputs/"
 if options.save is not None and options.save != "None" and options != "none":
     outDir = options.save
 redirector = "root://submit50.mit.edu/"
-username = getpass.getuser()
-#username = 'jinw65'
+#username = getpass.getuser()
+username = 'jinw65'
 
 if os.path.isdir("/data/submit/cms/store/user/" + username):
     # define these if --xrootd 0
@@ -107,8 +107,8 @@ if os.path.isdir("/data/submit/cms/store/user/" + username):
 elif os.path.isdir("/data/submit/" + username):
     # define these if --xrootd 0
     dataDirLocal = "/data/submit/{}/SUEP/{}/{}/".format(
-        getpass.getuser(), options.tag, options.dataset
-#        "jinw65", options.tag, options.dataset
+#        getpass.getuser(), options.tag, options.dataset
+        "jinw65", options.tag, options.dataset
     )
     # and these if --xrootd 1
     dataDirXRootD = "/{}/SUEP/{}/{}/".format(
@@ -131,7 +131,7 @@ if options.scouting:
             "yvar": "SUEP_nconst_CL",
             "yvar_regions": [0, 18, 50, 1000],
             "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 50]],
-            "selections": [["ht", ">", 560], ["ntracks", ">", 0]],
+            "selections": [["ht", ">", 600], ["ntracks", ">", 0]],
         },
        "ClusterInverted": {
             "input_method": "CL",
@@ -140,7 +140,7 @@ if options.scouting:
             "yvar": "ISR_nconst_CL",
             "yvar_regions": [0, 18, 50, 1000],
             "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 50]],
-            "selections": [["ht", ">", 560], ["ntracks", ">", 0]],
+            "selections": [["ht", ">", 650], ["ntracks", ">", 0]],
         },
     }
 else:
@@ -819,8 +819,8 @@ total_gensumweight = 0
 output = {"labels": []}
 
 # get list of files
-username = getpass.getuser()
-#username = 'jinw65'
+#username = getpass.getuser()
+username = 'jinw65'
 if options.file:
     files = [options.file]
 elif options.xrootd:
