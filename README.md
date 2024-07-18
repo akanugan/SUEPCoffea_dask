@@ -37,36 +37,39 @@ PAS: NA
 
 Paper: https://gitlab.cern.ch/tdr/papers/EXO-23-003
 
-## to run the producer
+## Environment
 
-```bash
-python3 condor_SUEP_WS.py --isMC=0/1 --era=201X --dataset=<dataset> --infile=XXX.root
-```
+### Singularity
 
-If you do not have the requirements set up then you can also run this through the docker container that the coffea team provides. This is simple and easy to do. You just need to enter the Singularity and then issue the command above. To do this use:
+The NTuple maker and the histmaker run by default using the coffea singularity provided through `/cvmfs`. You can use this locally by,
 
 ```bash
 singularity shell -B ${PWD}:/work /cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask:latest
 ```
 
-If there are files in other folders that are necessary (The folder with your NTuples for example) you can bind additional folders like with the following which will allow one to access the files in the `/mnt` directory:
+If there are files in other folders that are necessary (the folder with your NTuples for example) you can bind additional folders with the following, which will allow one to access the files in the `/mnt` directory:
 
 ```bash
 export SINGULARITY_BIND="/mnt"
 ```
 
-## Manually control condor jobs rather than Dask
+or by adding `--bind /path1,/path2/,...` to the `singularity shell` command.
 
-The `kraken_run.py` file which will submit Condor jobs for all the files in specified datasets. This submission currently uses `xrdfs` to find the files stored on Kraken. An example submission can be seen below:
+### Python environment
+
+A minimal python environment is provided in `environment.yml`.
+Install this with
 
 ```bash
-python kraken_run.py --isMC=1 --era=2018 --tag=<tag name> --input=filelist/list_2018_MC_A01.txt
+conda env create -f environment.yml
+conda activate suep
 ```
 
-The submission will name a directory in the output directory after the tag name you input. If the tag already exists use the `--force` option if you are trying to resubmit/overwrite.
+This environment should be enough for all the important parts of the workflow: the NTuple maker, the histmaker, and the plotting.
 
-Note that this submission will look for the dataset `xsec` in `xsections_<era>.yaml`.
+## Overview
 
+<<<<<<< HEAD
 To monitor and resubmit jobs we can use the `monitor.py` file.
 
 ```bash
@@ -130,3 +133,9 @@ Explained here is an example workflow. Each of these scripts should have more de
 
 7. Run `make_plots.py` (if needed, with `multithread.py`) over all the desired datasets to produce histograms
 8. Use plotting notebooks like `plot.ipynb` to display them.
+=======
+The workflow is as follows:
+1. `workflows/`: Produce NTuples from NanoAOD files using the NTuple maker for your analysis. This is done using coffea producers treating events as awkward arrays, and clustering using FastJet. The NTuples are stored in hdf5 files in tabular format in pandas dataframes. This is usually ran through HTCondor or Dask. See the README in `workflows/` for more information for how to run this for each analysis.
+2. `histmaker/`: Make histograms from the NTuples using the histmaker. The histograms are stored in root files hist histograms. You can run this locally or through Slurm. See the README in `histmaker/` for more information for how to run this.
+3. `plotting/`: Plot the histograms using the plotting notebooks. See the README in `plotting/` for more information.
+>>>>>>> c4034df2a77306eed4493c6390d60168da42ff86

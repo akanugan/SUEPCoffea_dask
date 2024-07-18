@@ -4,6 +4,7 @@ Coffea producer for SUEP analysis. Uses fastjet package to recluster large jets:
 https://github.com/scikit-hep/fastjet
 Chad Freer and Luca Lavezzo, 2021
 """
+
 from typing import Optional
 
 import awkward as ak
@@ -11,9 +12,6 @@ import numpy as np
 import pandas as pd
 import vector
 from coffea import processor
-
-# IO utils
-import workflows.pandas_utils as pandas_utils
 
 # Importing SUEP specific functions
 import workflows.SUEP_utils as SUEP_utils
@@ -29,6 +27,9 @@ from workflows.CMS_corrections.track_killing_utils import (
     scout_track_killing,
     track_killing,
 )
+
+# IO utils
+from workflows.utils import pandas_utils
 
 # Set vector behavior
 vector.register_awkward()
@@ -449,9 +450,9 @@ class SUEP_cluster(processor.ProcessorABC):
                 self.out_vars["PV_npvs" + out_label] = ak.num(events.Vertex.x)
             else:
                 if self.isMC:
-                    self.out_vars[
-                        "Pileup_nTrueInt" + out_label
-                    ] = events.Pileup.nTrueInt
+                    self.out_vars["Pileup_nTrueInt" + out_label] = (
+                        events.Pileup.nTrueInt
+                    )
                 self.out_vars["PV_npvs" + out_label] = events.PV.npvs
                 self.out_vars["PV_npvsGood" + out_label] = events.PV.npvsGood
 
@@ -464,7 +465,10 @@ class SUEP_cluster(processor.ProcessorABC):
                     self.out_vars["PSWeight_FSR_down" + out_label] = psweights[3]
                 else:
                     self.out_vars["PSWeight" + out_label] = psweights
-                GetPrefireWeights(self, events)  # Prefire weights
+                prefireweights = GetPrefireWeights(self, events)  # Prefire weights
+                self.out_vars["prefire_nom"] = prefireweights[0]
+                self.out_vars["prefire_up"] = prefireweights[1]
+                self.out_vars["prefire_down"] = prefireweights[2]
 
         # get gen SUEP kinematics
         SUEP_genMass = len(events) * [0]
