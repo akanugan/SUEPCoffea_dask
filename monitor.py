@@ -33,6 +33,13 @@ def main():
     parser.add_argument("-t", "--tag", type=str, default="IronMan", required=True)
     parser.add_argument("-r", "--resubmit", type=int, default=0, help="")
     parser.add_argument(
+        "-w",
+        "--wait",
+        type=float,
+        default=0,
+        help="Number of hours to wait between sample resubmissions.",
+    )
+    parser.add_argument(
         "-m",
         "--move",
         type=int,
@@ -52,16 +59,14 @@ def main():
     )
     out_dir_xrd = "/" + username + "/SUEP/" + options.tag + "/{}/"
     move_dir = "/work/submit/" + username + "/SUEP/" + options.tag + "/{}/"
-    jobs_base_dir = "/work/submit/" + username + "/SUEPCoffea_dask/logs/"
+    jobs_base_dir = "/work/submit/" + username + "/SUEP/logs/"
 
     if options.move:
-        if not os.path.isdir(
-            "/work/submit/" + username + "/SUEPCoffea_dask/" + options.tag
-        ):
+        if not os.path.isdir("/work/submit/" + username + "/SUEP/" + options.tag):
             subprocess.run(
                 [
                     "mkdir",
-                    "/work/submit/" + username + "/SUEPCoffea_dask/" + options.tag,
+                    "/work/submit/" + username + "/SUEP/" + options.tag,
                 ]
             )
 
@@ -92,7 +97,7 @@ def main():
         totals, completeds = 0, 0
         missing_samples = []  # samples with no inputfiles.dat or output dir
         empty_samples = []  # samples with  no completed jobs
-        for sample in stream.read().split("\n"):
+        for isample, sample in enumerate(stream.read().split("\n")):
             if len(sample) <= 1:
                 continue
             if "#" in sample:
@@ -101,12 +106,13 @@ def main():
             if "/" in sample and len(sample.split("/")) <= 1:
                 continue
 
-            if "/" in sample:
-                sample_name = sample.split("/")[-1]
-            else:
-                sample_name = sample
+            sample_name = sample
+            if "/" in sample_name:
+                sample_name = sample_name.split("/")[-1]
+            if ".root" in sample_name:
+                sample_name = sample_name.replace(".root", "")
 
-            jobs_dir = "_".join(["jobs", options.tag, sample_name])
+            jobs_dir = "/".join([options.tag, sample_name])
             jobs_dir = jobs_base_dir + jobs_dir
 
             if not os.path.isdir(out_dir.format(sample_name)):
@@ -141,6 +147,7 @@ def main():
 
             njobs = len(jobs)
             complete_list = os.listdir(out_dir.format(sample_name))
+            complete_list = [f for f in complete_list if not f.startswith("gitinfo")]
             nfile = len(complete_list)
 
             if njobs == 0:
@@ -173,7 +180,7 @@ def main():
             totals += njobs
 
             # If files are missing we resubmit with the same condor.sub
-            if options.resubmit:
+            if options.resubmit and (nfile < njobs):
                 logging.info(f"-- resubmitting files for {sample}")
                 file_names = []
                 for item in complete_list:
@@ -188,6 +195,12 @@ def main():
                 for redo_file in jobs_resubmit:
                     resubmit_file.write(redo_file + "\n")
                 resubmit_file.close()
+
+                if options.wait > 0 and isample != 0:
+                    logging.info(
+                        f"Waiting {options.wait} hours ({round(options.wait*60)} minutes) before resubmitting"
+                    )
+                    subprocess.run(["sleep", str(options.wait * 3600)])
 
                 htc = subprocess.Popen(
                     "condor_submit " + os.path.join(jobs_dir, "condor.sub"),

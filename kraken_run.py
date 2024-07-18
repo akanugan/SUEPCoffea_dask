@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 
 from histmaker.fill_utils import get_git_info
 from plotting.plot_utils import check_proxy
@@ -31,9 +32,13 @@ sleep $[ ( $RANDOM % 1000 )  + 1 ]s
 
 pip install h5py
 
+echo "----- xrdcp the input file over"
+echo "xrdcp $2 $3.root"
+xrdcp $2 $3.root
+
 echo "----- Found Proxy in: $X509_USER_PROXY"
-echo "python3 {condor_file} --jobNum=$1 --isMC={ismc} --era={era} --doInf={doInf} --doSyst={doSyst} --dataset={dataset} --infile=$2"
-python3 {condor_file} --jobNum=$1 --isMC={ismc} --era={era} --doInf={doInf} --doSyst={doSyst} --dataset={dataset} --infile=$2
+echo "python3 {condor_file} --jobNum=$1 --isMC={ismc} --era={era} --doInf={doInf} --doSyst={doSyst} --dataset={dataset} --infile=$3.root"
+python3 {condor_file} --jobNum=$1 --isMC={ismc} --era={era} --doInf={doInf} --doSyst={doSyst} --dataset={dataset} --infile=$3.root
 
 #echo "----- transferring output to scratch :"
 echo "xrdcp {outfile}.{file_ext} {redirector}/{outdir}/$3.{file_ext}"
@@ -43,6 +48,9 @@ xrdcp {outfile}.{file_ext} {redirector}/{outdir}/$3.{file_ext}
 
 echo "rm *.{file_ext}"
 rm *.{file_ext}
+
+echo "rm $3.root"
+rm $3.root
 
 echo " ------ THE END (everyone dies !) ----- "
 """
@@ -69,11 +77,6 @@ use_x509userproxy     = True
 x509userproxy         = /home/submit/{user}/{proxy}
 +AccountingGroup      = "analysis.{user}"
 Requirements          = ( BOSCOCluster =!= "t3serv008.mit.edu" && BOSCOCluster =!= "ce03.cmsaf.mit.edu" && BOSCOCluster =!= "eofe8.mit.edu")
-#requirements          = (target.MACHINE == t3btch115.mit.edu)
-#requirements          = ( ((BOSCOCluster == "t3serv008.mit.edu") || (BOSCOGroup == "bosco_cms" && BOSCOCluster == "ce03.cmsaf.mit.edu")) && HAS_CVMFS_cms_cern_ch )
-#requirements          = (BOSCOGroup == "bosco_cms" && BOSCOCluster == "ce03.cmsaf.mit.edu"  && Machine =!= LastRemoteHost && HAS_CVMFS_cms_cern_ch)
-#requirements          = (BOSCOCluster == "t3serv008.mit.edu" && Machine =!= LastRemoteHost && HAS_CVMFS_cms_cern_ch )
-# requirements          = ( BOSCOCluster =!= "t3serv008.mit.edu" && BOSCOCluster =!= "ce03.cmsaf.mit.edu")
 +DESIRED_Sites        = "T2_AT_Vienna,T2_BE_IIHE,T2_BE_UCL,T2_BR_SPRACE,T2_BR_UERJ,T2_CH_CERN,T2_CH_CERN_AI,T2_CH_CERN_HLT,T2_CH_CERN_Wigner,T2_CH_CSCS,T2_CH_CSCS_HPC,T2_CN_Beijing,T2_DE_DESY,T2_DE_RWTH,T2_EE_Estonia,T2_ES_CIEMAT,T2_ES_IFCA,T2_FI_HIP,T2_FR_CCIN2P3,T2_FR_GRIF_IRFU,T2_FR_GRIF_LLR,T2_FR_IPHC,T2_GR_Ioannina,T2_HU_Budapest,T2_IN_TIFR,T2_IT_Bari,T2_IT_Legnaro,T2_IT_Pisa,T2_IT_Rome,T2_KR_KISTI,T2_MY_SIFIR,T2_MY_UPM_BIRUNI,T2_PK_NCP,T2_PL_Swierk,T2_PL_Warsaw,T2_PT_NCG_Lisbon,T2_RU_IHEP,T2_RU_INR,T2_RU_ITEP,T2_RU_JINR,T2_RU_PNPI,T2_RU_SINP,T2_TH_CUNSTDA,T2_TR_METU,T2_TW_NCHC,T2_UA_KIPT,T2_UK_London_IC,T2_UK_SGrid_Bristol,T2_UK_SGrid_RALPP,T2_US_Caltech,T2_US_Florida,T2_US_Nebraska,T2_US_Purdue,T2_US_UCSD,T2_US_Vanderbilt,T2_US_Wisconsin,T3_CH_CERN_CAF,T3_CH_CERN_DOMA,T3_CH_CERN_HelixNebula,T3_CH_CERN_HelixNebula_REHA,T3_CH_CMSAtHome,T3_CH_Volunteer,T3_US_HEPCloud,T3_US_NERSC,T3_US_OSG,T3_US_PSC,T3_US_SDSC,T3_US_MIT"
 +SingularityImage     = "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/coffeateam/coffea-dask:latest"
 +JobFlavour           = "{queue}"
@@ -122,10 +125,23 @@ def main():
         "-m", "--maxFiles", type=int, default=-1, help="maximum number of files"
     )
     parser.add_argument("--redo-proxy", action="store_true", help="redo the voms proxy")
-    parser.add_argument("--channel", type=str, default="ggF", help="ggF or WH")
+    parser.add_argument(
+        "--channel",
+        type=str,
+        required=True,
+        help="Channel to run.",
+        choices=["ggF", "WH"],
+    )
     parser.add_argument("-sc", "--scout", type=int, default=0, help="Scouting data.")
     parser.add_argument(
         "-ML", "--ML", type=int, default=0, help="ML samples production."
+    )
+    parser.add_argument(
+        "-w",
+        "--wait",
+        type=float,
+        default=1,
+        help="Wait time before submitting the next sample in hours (default = 1 hour). This is needed to avoid overloading the MIT T2 with xrootd requests.",
     )
     parser.add_argument("--verbose", action="store_true", help="verbose output")
     options = parser.parse_args()
@@ -146,11 +162,14 @@ def main():
         outdir = "/data/submit/" + username + "/SUEP/{tag}/{sample}/"
         outdir_condor = "/" + username + "/SUEP/{tag}/{sample}/"
     else:
-        print("Cannot access /data/submit/$USER or /data/submit/cms/store/user/$USER!")
-        exit()
+        logging.error(
+            "Cannot access /data/submit/$USER or /data/submit/cms/store/user/$USER!"
+        )
+        sys.exit()
     workdir = os.getcwd()
-    logdir = "/work/submit/" + username + "/SUEPCoffea_dask/logs/"
-    redirector = "root://submit50.mit.edu/"
+    logdir = "/work/submit/" + username + "/SUEP/logs/"
+    default_input_redirector = "root://xrootd.cmsaf.mit.edu/"
+    output_redirector = "root://submit50.mit.edu/"
     proxy_base = f"x509up_u{os.getuid()}"
     home_base = os.environ["HOME"]
 
@@ -165,6 +184,10 @@ def main():
             condor_file = "condor_ML.py"
             outfile = "out"
             file_ext = "hdf5"
+        elif options.cutflow == 1:
+            condor_file = "condor_SUEP_cutflow.py"
+            outfile = "cutflow"
+            file_ext = "coffea"
         else:
             condor_file = "condor_SUEP_ggF.py"
             outfile = "out"
@@ -182,103 +205,68 @@ def main():
     missing_samples = []
 
     with open(options.input) as stream:
-        for sample in stream.read().split("\n"):
-            if len(sample) < 1:
+        for iSample, sample_path in enumerate(stream.read().split("\n")):
+            # skip commented out or incorrect sample paths
+            if len(sample_path) < 1:
                 continue
-            if "#" in sample or ("/" in sample and len(sample.split("/")) <= 1):
+            if "#" in sample_path or (
+                "/" in sample_path and len(sample_path.split("/")) <= 1
+            ):
                 continue
-            if "/" in sample:
-                sample_name = sample.split("/")[-1]
+
+            # extract sample name from each sample path
+            if "/" in sample_path:
+                sample_name = sample_path.split("/")[-1]
             else:
-                sample_name = sample
-            jobs_dir = "_".join([logdir + "jobs", options.tag, sample_name])
-            logging.info("-- sample_name : " + sample)
+                sample_name = sample_path
+            if sample_name.endswith(
+                ".root"
+            ):  # case where 1 file is given as input, treated as a separate sample
+                sample_name = sample_name.replace(".root", "")
+
+            # if the redirector is specified, take it, and strip it from the sample path, if not use the default
+            if sample_path.startswith("root://"):
+                sample_input_redirector = "root://" + sample_path.split("//")[1] + "/"
+                sample_path = sample_path.replace(sample_input_redirector, "")
+            else:
+                sample_input_redirector = default_input_redirector
+
+            logging.info("-- sample : " + sample_name)
 
             # set up the jobs directory
+            jobs_dir = "/".join([logdir, options.tag, sample_name])
             if os.path.isdir(jobs_dir):
                 if not options.force:
-                    logging.error(" " + jobs_dir + " already exist !")
+                    logging.error(" " + jobs_dir + " already exists !")
                     continue
                 else:
                     logging.warning(
                         " " + jobs_dir + " already exists, forcing its deletion!"
                     )
                     shutil.rmtree(jobs_dir)
-                    os.mkdir(jobs_dir)
+                    os.makedirs(jobs_dir)
             else:
-                os.mkdir(jobs_dir)
+                os.makedirs(jobs_dir)
 
-            # ---- getting the list of file for the dataset by xrdfs ls
-
-            if (
-                (options.era == "2018" or options.era == "2017")
-                and options.private == 1
-                and options.channel == "ggF"
-            ):
-                userOwner = "bmaier/suep"
-                sample_path = "/store/user/{}/official_private/{}/{}".format(
-                    userOwner, options.era, sample_name
-                )
-            elif (
-                (options.era == "2016" or options.era == "2016apv")
-                and options.private == 1
-                and options.channel == "ggF"
-            ):
-                userOwner = "cfreer/suep_correct"
-                sample_path = "/store/user/{}/official_private/{}/{}".format(
-                    userOwner, options.era, sample_name
-                )
-            elif options.private == 1 and options.channel == "WH":
-                sample_path = "/jreicher/SUEP/WH_private_signals/merged/"
-            elif not options.private and "/" in sample:
-                sample_path = sample
-            else:
-                sys.exit("Double check this.")
-
+            # get the filelist with xrootd
             Raw_list = []
-            # get the filelist with xrootd (use same door to take advantage of caching and speed up the process)
-            if options.channel == "WH" and options.private == 1:
-                # input txt file of signal samples includes the path (samples not in xrdfs so this is current work around)
-                # ^ e.g. /jreicher/SUEP/WH_private_signals/merged/WHleptonicpythia_generic_M125.0_MD2.00_T0.50_HT-1_UL18_NANOAOD
-                # (the above is one file per sample)
-                # shouldn't mess with anything, just a simple work around for joey's WH suep samples in /data/submit/
-                file = (
-                    "root://submit50.mit.edu/"
-                    + sample_path
-                    + "/"
-                    + sample_name
-                    + ".root"
-                    + " 0 0 1 1 1 1"
-                )
-                Raw_list.append(file)
+            comm = subprocess.Popen(
+                ["xrdfs", sample_input_redirector, "ls", sample_path],
+                stdout=subprocess.PIPE,
+            )
+            Raw_list = comm.communicate()[0].decode("utf-8").split("\n")
+            Raw_list = [sample_input_redirector + f for f in Raw_list if ".root" in f]
+            if len(Raw_list) == 0:
+                missing_samples.append(sample_name)
 
-            else:
-                comm = subprocess.Popen(
-                    ["xrdfs", "root://xrootd.cmsaf.mit.edu/", "ls", sample_path],
-                    stdout=subprocess.PIPE,
-                )
-                print(f"xrdfs root://xrootd5.cmsaf.mit.edu/ ls {sample_path}")
-
-                raw_input_list = comm.communicate()[0].decode("utf-8").split("\n")
-
-                if raw_input_list == [""]:
-                    missing_samples.append(sample_name)
-
-                # limit to max number of files, if specified
-                if options.maxFiles > 0:
-                    raw_input_list = raw_input_list[: options.maxFiles]
-
-                for f in raw_input_list:
-                    if len(f) == 0:
-                        continue
-                    new_f = f"root://xrootd.cmsaf.mit.edu/{f} 0 0 1 1 1 1"
-                    Raw_list.append(new_f)
+            # limit to max number of files, if specified
+            if options.maxFiles > 0:
+                Raw_list = Raw_list[: options.maxFiles]
 
             # write list of files to inputfiles.dat
             nfiles = 0
             with open(os.path.join(jobs_dir, "inputfiles.dat"), "w") as infiles:
-                for i in Raw_list:
-                    full_file = i.split(" ")[0]
+                for full_file in Raw_list:
                     just_file = full_file.split("/")[-1]
                     infiles.write(full_file + "\t" + just_file.split(".root")[0] + "\n")
                     nfiles += 1
@@ -292,15 +280,6 @@ def main():
             # write the executable we give to condor
             with open(os.path.join(jobs_dir, "script.sh"), "w") as scriptfile:
                 extras = ""
-                if options.cutflow:
-                    extras += """
-                    echo "xrdcp {outCutflow}.coffea {redirector}/{outdir}/$3_cutflow.coffea"
-                    xrdcp {outCutflow}.coffea {redirector}/{outdir}/$3_cutflow.coffea
-                    """.format(
-                        outdir=fin_outdir_condor,
-                        outCutflow="cutflow",
-                        redirector=redirector,
-                    )
                 script = script_TEMPLATE.format(
                     proxy=proxy_base,
                     ismc=options.isMC,
@@ -312,7 +291,7 @@ def main():
                     condor_file=condor_file,
                     outfile=outfile,
                     file_ext=file_ext,
-                    redirector=redirector,
+                    redirector=output_redirector,
                     extras=extras,
                 )
                 scriptfile.write(script)
@@ -353,6 +332,19 @@ def main():
             if options.dryrun:
                 continue
 
+            # wait before submitting the next sample
+            if iSample != 0 and options.wait > 0:
+                current_time = datetime.datetime.now()
+                formatted_time = current_time.strftime("%H:%M")
+                logging.info(
+                    "Waiting {} hours ({:g} minutes) before submitting this sample... (current time: {})".format(
+                        options.wait,
+                        float("{:.{p}g}".format(options.wait * 60, p=2)),
+                        formatted_time,
+                    )
+                )
+                time.sleep(options.wait * 3600)
+
             # submit!
             htc = subprocess.Popen(
                 "condor_submit " + os.path.join(jobs_dir, "condor.sub"),
@@ -367,9 +359,11 @@ def main():
             logging.info(f"condor submission status : {exit_status}")
 
     if len(missing_samples) > 0:
-        logging.info("\nMissing samples:")
+        logging.info(r"\Samples with no input files:")
         for s in missing_samples:
             logging.info(s)
+
+    logging.info("All done!")
 
 
 if __name__ == "__main__":

@@ -6,8 +6,10 @@ import sys
 from collections import defaultdict
 from copy import deepcopy
 
+import awkward as ak
 import numpy as np
 import pandas as pd
+import vector
 
 
 def h5load(ifile: str, label: str):
@@ -70,13 +72,22 @@ def get_git_info(path="."):
     )
     diff = subprocess.check_output(["git", "diff"]).strip().decode("utf-8")
 
-    logging.debug(f"Current Commit: {commit}")
-    logging.debug(f"Git Diff:\n{diff}")
-
     return commit, diff
 
 
-def getXSection(dataset: str, year=None, path="../data/") -> float:
+def isSampleSignal(sample: str, year: str, path: str = "../data/") -> bool:
+    """
+    Check the xsections json database to see if a sample is signal or not.
+    """
+    xsecs_database = f"{path}/xsections_{year}.json"
+    with open(xsecs_database) as file:
+        MC_xsecs = json.load(file)
+        return bool(MC_xsecs[sample]["signal"])
+
+
+def getXSection(
+    dataset: str, year, path: str = "../data/", failOnKeyError: bool = True
+) -> float:
     xsection = 1
 
     xsec_file = f"{path}/xsections_{year}.json"
@@ -90,9 +101,37 @@ def getXSection(dataset: str, year=None, path="../data/") -> float:
             logging.warning(
                 f"WARNING: I did not find the xsection for {dataset} in {xsec_file}. Check the dataset name and the relevant yaml file."
             )
-            return 1
+            if failOnKeyError:
+                raise KeyError(f"Could not find xsection for {dataset} in {xsec_file}")
+            else:
+                return 1
 
     return xsection
+
+
+def format_selection(selection: str, df: pd.DataFrame) -> list:
+    """
+    Format a selection string into a list of the form [attribute, operator, value].
+    Converts value to a float, if needed.
+    Checks if the attribute exists in the DataFrame.
+    :return list: [attribute, operator, value]
+    """
+    if (
+        type(selection) is str
+    ):  # converts "attribute operator value" to ["attribute", "operator", "value"] to pass to make_selection()
+        selection = selection.split(" ")
+    if (
+        selection[0] not in df.keys()
+    ):  # error out if variable doesn't exist in the DataFrame
+        raise Exception(
+            f"Trying to apply a cut on a variable {selection[0]} that does not exist in the DataFrame"
+        )
+    if type(selection[2]) is str and is_number(selection[2]):
+        selection[2] = float(
+            selection[2]
+        )  # convert to float if the value to cut on is a number
+
+    return selection
 
 
 def make_selection(
@@ -201,6 +240,7 @@ def prepare_DataFrame(
     blind: bool = True,
     isMC: bool = False,
     cutflow: dict = {},
+    output: dict = {},
 ) -> pd.DataFrame:
     """
     Applies blinding, selections, and makes new variables. See README.md for more details.
@@ -216,10 +256,11 @@ def prepare_DataFrame(
     """
 
     # 1. keep only events that passed this method, if any defined
-    if config.get("xvar"):
-        if config["xvar"] not in df.columns:
+    if config.get("method_var"):
+        if config["method_var"] not in df.columns:
             return None
-        df = df[~df[config["xvar"]].isnull()]
+        # N.B.: this is the pandas-suggested way to do this, changing it gives performance warnings
+        df = df[(~df[config["method_var"]].isnull())].copy()
 
     # 2. blind
     if blind and not isMC:
@@ -230,27 +271,61 @@ def prepare_DataFrame(
     # 3. make new variables
     if "new_variables" in config.keys():
         for var in config["new_variables"]:
-            df = make_new_variable(df, var[0], var[1], *var[2])
+            try:
+                df = make_new_variable(df, var[0], var[1], *var[2])
+            except KeyError as e:
+                logging.warning(
+                    f"Could not make new variable {var[0]} because of KeyError: {e}"
+                )
 
     # 4. apply selections
     if "selections" in config.keys():
-        for sel in config["selections"]:
-            if (
-                type(sel) is str
-            ):  # converts "attribute operator value" to ["attribute", "operator", "value"] to pass to make_selection()
-                sel = sel.split(" ")
-            if (
-                sel[0] not in df.keys()
-            ):  # error out if variable doesn't exist in the DataFrame
-                raise Exception(
-                    f"Trying to apply a cut on a variable {sel[0]} that does not exist in the DataFrame"
-                )
-            if type(sel[2]) is str and sel[2].isdigit():
-                sel[2] = float(
-                    sel[2]
-                )  # convert to float if the value to cut on is a number
 
-            # make the selection
+        # store number of events passing using the event weights into the cutflow dict (this is redundant since the last cutflow value from ntuplemaker already exists)
+        cutflow_label = "cutflow_histmaker_total"
+        if cutflow_label in cutflow.keys():
+            cutflow[cutflow_label] += np.sum(df["event_weight"])
+        else:
+            cutflow[cutflow_label] = np.sum(df["event_weight"])
+
+        # make n-1 plots
+        for i, isel in enumerate(config["selections"]):
+            isel = format_selection(isel, df)
+
+            # if the histogram is already initialized for this variable, make the N-1 histogram
+            histName = isel[0] + "_" + label_out
+            if histName not in output.keys():
+                continue
+
+            n1HistName = (
+                isel[0]
+                + "_noCut_"
+                + isel[0]
+                + "_"
+                + isel[1]
+                + "_"
+                + str(isel[2])
+                + "_"
+                + label_out
+            )
+            if n1HistName not in output.keys():
+                output[n1HistName] = output[histName].copy()
+
+            # apply all but the ith selection
+            mask = ~df[config["method_var"]].isnull()
+            for j, jsel in enumerate(config["selections"]):
+                if j == i:
+                    continue
+                jsel = format_selection(jsel, df)
+                jmask = make_selection(df, jsel[0], jsel[1], jsel[2], apply=False)
+                mask = mask & jmask
+
+            assert len(mask) == df.shape[0]
+            output[n1HistName].fill(df[mask][isel[0]], weight=df[mask]["event_weight"])
+
+        # now, apply selections
+        for isel, sel in enumerate(config["selections"]):
+            sel = format_selection(sel, df)
             df = make_selection(df, sel[0], sel[1], sel[2], apply=True)
 
             # store number of events passing using the event weights into the cutflow dict
@@ -265,6 +340,14 @@ def prepare_DataFrame(
     return df
 
 
+def is_number(s: str) -> bool:
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
 def make_new_variable(
     df: pd.DataFrame, name: str, function: callable, *columns: list
 ) -> pd.DataFrame:
@@ -272,32 +355,42 @@ def make_new_variable(
     Make a new column in the DataFrame df by applying the function to the columns
     passed as *columns. The new column will be named 'name'.
     """
+
     df[name] = function(*[df[col] for col in columns])
     return df
 
 
-def fill_2d_distributions(df, output, label_out, input_method):
+def fill_ND_distributions(df, output, label_out, input_method):
+    """
+    Fill all N>1 dimensional histograms.
+    To do, we expect that they are named as follows:
+    ND_var1_vs_var2_vs_var3_vs_..._vs_varNth_label_out
+    Where var1, var2, ..., var N are the variables to be plotted in each dimension,
+    and N is an integer greater than 1.
+    """
+
     keys = list(output.keys())
-    keys_2Dhists = [k for k in keys if "2D" in k]
+    keys_NDhists = [k for k in keys if "_vs_" in k and k.endswith(label_out)]
     df_keys = list(df.keys())
 
-    for key in keys_2Dhists:
-        if not key.endswith(label_out):
+    for key in keys_NDhists:
+
+        nd_hist_name = key[3 : -(len(label_out) + 1)]  # cut out "ND_" and output label
+        variables = nd_hist_name.split("_vs_")
+
+        # skip histograms if there is a variable is not in the dataframe
+        # if the input method is not in the variable name, add it
+        skip = False
+        for ivar, var in enumerate(variables):
+            if var not in df_keys:
+                var += "_" + input_method
+                if var not in df_keys:
+                    skip = True
+                variables[ivar] = var
+        if skip:
             continue
-        string = key[
-            len("2D") + 1 : -(len(label_out) + 1)
-        ]  # cut out "2D_" and output label
-        var1 = string.split("_vs_")[0]
-        var2 = string.split("_vs_")[1]
-        if var1 not in df_keys:
-            var1 += "_" + input_method
-            if var1 not in df_keys:
-                continue
-        if var2 not in df_keys:
-            var2 += "_" + input_method
-            if var2 not in df_keys:
-                continue
-        output[key].fill(df[var1], df[var2], weight=df["event_weight"])
+
+        output[key].fill(*[df[var] for var in variables], weight=df["event_weight"])
 
 
 def auto_fill(
@@ -335,8 +428,8 @@ def auto_fill(
             df[plot], weight=df["event_weight"]
         )
 
-    # 2. fill some 2D distributions
-    fill_2d_distributions(df, output, label_out, input_method)
+    # 2. fill some ND distributions
+    fill_ND_distributions(df, output, label_out, input_method)
 
     # 3. divide the dfs by region
     if do_abcd:
@@ -421,19 +514,36 @@ def get_track_killing_config(config: dict) -> dict:
         label_out_new = label_out
         new_config[label_out_new] = deepcopy(config[label_out])
         new_config[label_out_new]["input_method"] += "_track_down"
-        new_config[label_out_new]["xvar"] += "_track_down"
-        new_config[label_out_new]["yvar"] += "_track_down"
-        for iSel in range(len(new_config[label_out_new]["SR"])):
-            new_config[label_out_new]["SR"][iSel][0] += "_track_down"
-        for iSel in range(len(new_config[label_out_new]["selections"])):
-            # handle some exceptions by hand, for now
-            if new_config[label_out_new]["selections"][iSel][0] in [
-                "ht",
-                "ngood_ak4jets",
-                "ht_JEC",
-            ]:
-                continue
-            new_config[label_out_new]["selections"][iSel][0] += "_track_down"
+        if "xvar" in new_config[label_out_new].keys():
+            new_config[label_out_new]["xvar"] += "_track_down"
+        if "yvar" in new_config[label_out_new]:
+            new_config[label_out_new]["yvar"] += "_track_down"
+        if "method_var" in new_config[label_out_new].keys():
+            new_config[label_out_new]["method_var"] += "_track_down"
+        if "SR" in new_config[label_out_new].keys():
+            for iSel in range(len(new_config[label_out_new]["SR"])):
+                new_config[label_out_new]["SR"][iSel][0] += "_track_down"
+        if "selections" in new_config[label_out_new].keys():
+            for iSel in range(len(new_config[label_out_new]["selections"])):
+                if type(new_config[label_out_new]["selections"][iSel]) is str:
+                    new_config[label_out_new]["selections"][iSel] = new_config[
+                        label_out_new
+                    ]["selections"][iSel].split(" ")
+                if new_config[label_out_new]["selections"][iSel][0] in [
+                    "ht",
+                    "ngood_ak4jets",
+                    "ht_JEC",
+                ]:
+                    continue
+                new_config[label_out_new]["selections"][iSel][0] += "_track_down"
+        if "new_variables" in new_config[label_out_new].keys():
+            for iVar in range(len(new_config[label_out_new]["new_variables"])):
+                vars = new_config[label_out_new]["new_variables"][iVar][2]
+                new_vars = []
+                for var in vars:
+                    if var in ["ht", "ngood_ak4jets", "ht_JEC"]:
+                        continue
+                    new_vars.append(var + "_track_down")
 
     return new_config
 
@@ -478,3 +588,113 @@ def blind_DataFrame(df: pd.DataFrame, label_out: str, SR: list) -> pd.DataFrame:
         )
     ]
     return df
+
+
+def deltaPhi_x_y(xphi, yphi):
+
+    # cast inputs to numpy arrays
+    yphi = np.array(yphi)
+
+    x_v = vector.arr({"pt": np.ones(len(xphi)), "phi": xphi})
+    y_v = vector.arr({"pt": np.ones(len(yphi)), "phi": yphi})
+
+    signed_dphi = x_v.deltaphi(y_v)
+    abs_dphi = np.abs(signed_dphi.tolist())
+
+    # deal with the cases where phi was initialized to a moot value like -999
+    abs_dphi[xphi > 2 * np.pi] = -999
+    abs_dphi[yphi > 2 * np.pi] = -999
+    abs_dphi[xphi < -2 * np.pi] = -999
+    abs_dphi[yphi < -2 * np.pi] = -999
+
+    return abs_dphi
+
+
+def deltaR(xEta, yEta, xPhi, yPhi):
+
+    # cast inputs to numpy arrays
+    xEta = np.array(xEta)
+    yEta = np.array(yEta)
+    xPhi = np.array(xPhi)
+    yPhi = np.array(yPhi)
+
+    x_v = vector.arr({"eta": xEta, "phi": xPhi, "pt": np.ones(len(xEta))})
+    y_v = vector.arr({"eta": yEta, "phi": yPhi, "pt": np.ones(len(yEta))})
+
+    dR = x_v.deltaR(y_v)
+
+    if type(dR) is ak.highlevel.Array:
+        dR = dR.to_numpy()
+
+    # deal with the cases where eta and phi were initialized to a moot value like -999
+    dR[xEta < -100] = -999
+    dR[yEta < -100] = -999
+    dR[xPhi < -100] = -999
+    dR[yPhi < -100] = -999
+
+    return dR
+
+
+def balancing_var(xpt, ypt):
+
+    # cast inputs to numpy arrays
+    xpt = np.array(xpt)
+    ypt = np.array(ypt)
+
+    var = np.where(ypt > 0, (xpt - ypt) / ypt, np.ones(len(xpt)) * -999)
+
+    # deal with the cases where pt was initialized to a moot value, and set it to a moot value of -999
+    var[xpt < 0] = -999
+    var[ypt < 0] = -999
+
+    return var
+
+
+def vector_balancing_var(xphi, yphi, xpt, ypt):
+
+    # cast inputs to numpy arrays
+    xpt = np.array(xpt)
+    ypt = np.array(ypt)
+    xphi = np.array(xphi)
+    yphi = np.array(yphi)
+
+    x_v = vector.arr({"pt": xpt, "phi": xphi})
+    y_v = vector.arr({"pt": ypt, "phi": yphi})
+
+    vector_sum_pt = (x_v + y_v).pt
+
+    if type(vector_sum_pt) is ak.highlevel.Array:
+        vector_sum_pt = vector_sum_pt.to_numpy()
+
+    var = np.where(ypt > 0, vector_sum_pt / ypt, np.ones(len(xpt)) * -999)
+
+    # deal with the cases where pt was initialized to a moot value, and set it to a moot value of -999
+    var[xpt < 0] = -999
+    var[ypt < 0] = -999
+
+    return var
+
+
+def vector_balancing_var2(xphi, yphi, xpt, ypt):
+
+    # cast inputs to numpy arrays
+    xpt = np.array(xpt)
+    ypt = np.array(ypt)
+    xphi = np.array(xphi)
+    yphi = np.array(yphi)
+
+    x_v = vector.arr({"pt": xpt, "phi": xphi})
+    y_v = vector.arr({"pt": ypt, "phi": yphi})
+
+    vector_sum_pt = (x_v + y_v).pt
+
+    if type(vector_sum_pt) is ak.highlevel.Array:
+        vector_sum_pt = vector_sum_pt.to_numpy()
+
+    var = np.where(ypt > 0, vector_sum_pt, np.ones(len(xpt)) * -999)
+
+    # deal with the cases where pt was initialized to a moot value, and set it to a moot value of -999
+    var[xpt < 0] = -999
+    var[ypt < 0] = -999
+
+    return var

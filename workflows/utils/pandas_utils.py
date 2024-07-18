@@ -56,7 +56,7 @@ def save_dfs(self, dfs, df_names, fname="out.hdf5", metadata=None):
         store.close()
 
 
-def format_dataframe(dataframe: pd.DataFrame, reducePrecision: bool = False):
+def format_dataframe(dataframe: pd.DataFrame):
     """
     Applies some formatting to efficiently store the data
     """
@@ -64,10 +64,6 @@ def format_dataframe(dataframe: pd.DataFrame, reducePrecision: bool = False):
         # hdf5 doesn't store well coffea accumulators, and we don't need them anymore, so convert them to their values
         if type(value) == coffea.processor.accumulator.value_accumulator:
             dataframe[key] = value.value
-        # reduce the float precision
-        if reducePrecision:
-            if "float" in str(dataframe[key].dtype):
-                dataframe[key] = dataframe[key].astype("float16")
     return dataframe
 
 
@@ -76,10 +72,7 @@ def format_metadata(metadata):
     Applies some formatting to efficiently store the metadata
     """
     for key in metadata.keys():
-        if (
-            "cutflow" in key
-            and type(metadata[key]) == coffea.processor.accumulator.value_accumulator
-        ):
+        if type(metadata[key]) == coffea.processor.accumulator.value_accumulator:
             metadata[key] = metadata[key].value
     return metadata
 

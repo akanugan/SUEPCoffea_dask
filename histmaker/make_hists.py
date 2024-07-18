@@ -14,6 +14,7 @@ import argparse
 import getpass
 import logging
 import os
+import pickle
 import subprocess
 import sys
 
@@ -32,7 +33,7 @@ from CMS_corrections import (
     triggerSF,
 )
 
-import plotting.plot_utils
+import plotting.plot_utils as plot_utils
 
 
 ### Parser #######################################################################################################
@@ -50,7 +51,7 @@ def makeParser(parser=None):
         "-sample",
         "--sample",
         type=str,
-        default="sample",
+        default=None,
         help="sample name.",
         required=False,
     )
@@ -101,9 +102,11 @@ def makeParser(parser=None):
     parser.add_argument(
         "--doABCD", type=int, default=0, help="make plots for each ABCD+ region"
     )
-    parser.add_argument("--doSyst", type=int, default=0, help="make systematic plots")
     parser.add_argument(
-        "--predictSR", type=int, default=0, help="Predict SR using ABCD method."
+        "--doSyst",
+        type=int,
+        default=0,
+        help="Run systematic up and down variations in additional to the nominal.",
     )
     parser.add_argument(
         "--blind", type=int, default=1, help="Blind the data (default=True)"
@@ -112,6 +115,13 @@ def makeParser(parser=None):
         "--weights",
         default="None",
         help="Pass the filename of the weights, e.g. --weights weights.npy",
+    )
+    parser.add_argument(
+        "-p",
+        "--printEvents",
+        action="store_true",
+        help="Print out events that pass the selections, used in particular for eventDisplay.py.",
+        required=False,
     )
     # other arguments
     parser.add_argument(
@@ -125,7 +135,7 @@ def makeParser(parser=None):
         "--redirector",
         type=str,
         default="root://submit50.mit.edu/",
-        help="xrootd redirector",
+        help="xrootd redirector (default: root://submit50.mit.edu/)",
         required=False,
     )
     parser.add_argument(
@@ -136,10 +146,15 @@ def makeParser(parser=None):
         required=False,
     )
     parser.add_argument(
-        "--verbose",
+        "--pkl",
         type=int,
         default=0,
-        help="verbosity level",
+        help="Use pickle files instead of root files (default=False)",
+    )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Run with verbose logging.",
         required=False,
     )
     return parser
@@ -159,7 +174,7 @@ def plot_systematic(df, metadata, config, syst, options, output, cutflow={}):
         df["event_weight"] = np.ones(df.shape[0])
 
     # apply systematics and weights
-    if options.isMC == 1:
+    if options.isMC:
 
         # 1) pileup weights
         puweights, puweights_up, puweights_down = pileup_weight.pileup_weight(
@@ -276,11 +291,20 @@ def plot_systematic(df, metadata, config, syst, options, output, cutflow={}):
             isMC=options.isMC,
             blind=options.blind,
             cutflow=cutflow,
+            output=output,
         )
 
         # if there are no events left after selections, no need to fill histograms
         if df_plot is None:
             continue
+
+        # print out events that pass the selections, if requested
+        if options.printEvents:
+            print("Events passing selections for", label_out)
+            for index, row in df_plot.iterrows():
+                print(
+                    f"{int(row['event'])}, {int(row['run'])}, {int(row['luminosityBlock'])}"
+                )
 
         # auto fill all histograms
         fill_utils.auto_fill(
@@ -312,20 +336,315 @@ def main():
     """
 
     if options.channel == "WH":
+        new_variables_WH = [
+            [
+                "bjetSel",
+                lambda x, y: ((x == 0) & (y < 2)),
+                ["nBTight", "nBLoose"],
+            ],
+            [
+                "W_SUEP_BV",
+                fill_utils.balancing_var,
+                ["W_pt", "SUEP_pt_HighestPT"],
+            ],
+            [
+                "W_jet1_BV",
+                fill_utils.balancing_var,
+                ["W_pt", "jet1_pt"],
+            ],
+            [
+                "ak4SUEP1_SUEP_BV",
+                fill_utils.balancing_var,
+                ["ak4jet1_inSUEPcluster_pt_HighestPT", "SUEP_pt_HighestPT"],
+            ],
+            [
+                "W_SUEP_vBV",
+                fill_utils.vector_balancing_var,
+                [
+                    "W_phi",
+                    "SUEP_phi_HighestPT",
+                    "W_pt",
+                    "SUEP_pt_HighestPT",
+                ],
+            ],
+            [
+                "W_SUEP_vBV2",
+                fill_utils.vector_balancing_var2,
+                [
+                    "W_phi",
+                    "SUEP_phi_HighestPT",
+                    "W_pt",
+                    "SUEP_pt_HighestPT",
+                ],
+            ],
+            [
+                "W_jet1_vBV",
+                fill_utils.vector_balancing_var,
+                ["W_phi", "jet1_phi", "W_pt", "jet1_pt"],
+            ],
+            [
+                "deltaPhi_SUEP_W",
+                fill_utils.deltaPhi_x_y,
+                [
+                    "SUEP_phi_HighestPT",
+                    "W_phi",
+                ],
+            ],
+            [
+                "deltaPhi_SUEP_MET",
+                fill_utils.deltaPhi_x_y,
+                [
+                    "SUEP_phi_HighestPT",
+                    "MET_phi",
+                ],
+            ],
+            [
+                "deltaPhi_lepton_MET",
+                fill_utils.deltaPhi_x_y,
+                ["lepton_phi", "MET_phi"],
+            ],
+            [
+                "deltaPhi_lepton_SUEP",
+                fill_utils.deltaPhi_x_y,
+                [
+                    "lepton_phi",
+                    "SUEP_phi_HighestPT",
+                ],
+            ],
+            [
+                "deltaPhi_minDeltaPhiMETJet_SUEP",
+                fill_utils.deltaPhi_x_y,
+                [
+                    "minDeltaPhiMETJet_phi",
+                    "SUEP_phi_HighestPT",
+                ],
+            ],
+            [
+                "deltaPhi_minDeltaPhiMETJet_MET",
+                fill_utils.deltaPhi_x_y,
+                [
+                    "minDeltaPhiMETJet_phi",
+                    "MET_phi",
+                ],
+            ],
+            [
+                "deltaPhi_SUEP_jet1",
+                fill_utils.deltaPhi_x_y,
+                [
+                    "SUEP_phi_HighestPT",
+                    "jet1_phi",
+                ],
+            ],
+            [
+                "deltaPhi_SUEP_bjet",
+                fill_utils.deltaPhi_x_y,
+                [
+                    "SUEP_phi_HighestPT",
+                    "bjet_phi",
+                ],
+            ],
+            [
+                "deltaPhi_jet1_bjet",
+                fill_utils.deltaPhi_x_y,
+                ["jet1_phi", "bjet_phi"],
+            ],
+            [
+                "deltaPhi_lepton_bjet",
+                fill_utils.deltaPhi_x_y,
+                ["lepton_phi", "bjet_phi"],
+            ],
+            [
+                "nak4jets_outsideSUEP",
+                lambda x, y: (x - y),
+                ["ngood_ak4jets", "ak4jets_inSUEPcluster_n_HighestPT"],
+            ],
+            [
+                "nonSUEP_S1",
+                lambda x, y: 1.5 * (x + y),
+                ["nonSUEP_eig0_HighestPT", "nonSUEP_eig1_HighestPT"],
+            ],
+            [
+                "ntracks_outsideSUEP",
+                lambda x, y: (x - y),
+                ["ntracks", "SUEP_nconst_HighestPT"],
+            ],
+            [
+                "BV_highestSUEPTrack_SUEP",
+                fill_utils.balancing_var,
+                ["SUEP_highestPTtrack_HighestPT", "SUEP_pt_HighestPT"],
+            ],
+            [
+                "SUEP_nconst_minus_otherAK15_maxConst",
+                lambda x, y: (x - y),
+                ["SUEP_nconst_HighestPT", "otherAK15_maxConst_nconst_HighestPT"],
+            ],
+            [
+                "jetsInSameHemisphere",
+                lambda x, y: ((x == 1) | (y < 1.5)),
+                ["ngood_ak4jets", "maxDeltaPhiJets"],
+            ],
+            [
+                "deltaPhi_genSUEP_SUEP",
+                fill_utils.deltaPhi_x_y,
+                ["SUEP_genPhi", "SUEP_phi_HighestPT"],
+            ],
+            [
+                "deltaR_genSUEP_SUEP",
+                fill_utils.deltaR,
+                [
+                    "SUEP_genEta",
+                    "SUEP_eta_HighestPT",
+                    "SUEP_genPhi",
+                    "SUEP_phi_HighestPT",
+                ],
+            ],
+            [
+                "percent_darkphis_inTracker",
+                lambda x, y: x / y,
+                ["n_darkphis_inTracker", "n_darkphis"],
+            ],
+            [
+                "percent_tracks_dPhiW0p2",
+                lambda x, y: x / y,
+                ["ntracks_dPhiW0p2", "ntracks"],
+            ],
+            [
+                "SUEPMostNumerous",
+                lambda x, y: x > y,
+                ["SUEP_nconst_HighestPT", "otherAK15_maxConst_nconst_HighestPT"],
+            ],
+            [
+                "MaxConstAK15_phi",
+                lambda x_nconst, y_nconst, x_phi, y_phi: np.where(
+                    x_nconst > y_nconst, x_phi, y_phi
+                ),
+                [
+                    "SUEP_nconst_HighestPT",
+                    "otherAK15_maxConst_nconst_HighestPT",
+                    "SUEP_phi_HighestPT",
+                    "otherAK15_maxConst_phi_HighestPT",
+                ],
+            ],
+            [
+                "MaxConstAK15_eta",
+                lambda x_nconst, y_nconst, x_eta, y_eta: np.where(
+                    x_nconst > y_nconst, x_eta, y_eta
+                ),
+                [
+                    "SUEP_nconst_HighestPT",
+                    "otherAK15_maxConst_nconst_HighestPT",
+                    "SUEP_eta_HighestPT",
+                    "otherAK15_maxConst_eta_HighestPT",
+                ],
+            ],
+            [
+                "deltaPhi_SUEPgen_MaxConstAK15",
+                fill_utils.deltaPhi_x_y,
+                ["SUEP_genPhi", "MaxConstAK15_phi"],
+            ],
+            [
+                "deltaR_SUEPgen_MaxConstAK15",
+                fill_utils.deltaR,
+                ["SUEP_genEta", "MaxConstAK15_eta", "SUEP_genPhi", "MaxConstAK15_phi"],
+            ],
+            [
+                "highestPTtrack_pt_norm",
+                lambda x, y: x / y,
+                ["SUEP_highestPTtrack_HighestPT", "SUEP_pt_HighestPT"],
+            ],
+            [
+                "highestPTtrack_pt_norm2",
+                lambda x, y: x / y,
+                ["SUEP_highestPTtrack_HighestPT", "SUEP_pt_avg_HighestPT"],
+            ],
+            ["isMuon", lambda x: abs(x) == 13, ["lepton_flavor"]],
+            ["isElectron", lambda x: abs(x) == 11, ["lepton_flavor"]],
+        ]
+        if options.isMC:
+            new_variables_WH += [
+                ["deltaPhi_W_genW", fill_utils.deltaPhi_x_y, ["genW_phi", "W_phi"]],
+                ["deltaPt_W_genW", lambda x, y: x - y, ["genW_pt", "W_pt"]],
+            ]
         config = {
-            # keys of config must include "HighestPT", but otherwise can be named to convenience,
-            # NOTE: it functions as a label, so useful to name according to selections that the key points to
-            # input method should always be HighestPT
-            "HighestPT": {
+            "SR": {
                 "input_method": "HighestPT",
-                "selections": [],
+                "method_var": "SUEP_nconst_HighestPT",
+                "SR": [
+                    ["SUEP_S1_HighestPT", ">=", 0.3],
+                    ["SUEP_nconst_HighestPT", ">=", 50],
+                ],
+                "selections": [
+                    "MET_pt > 30",
+                    "W_pt > 40",
+                    "W_mt < 130",
+                    "W_mt > 30",
+                    "bjetSel == 1",
+                    "deltaPhi_SUEP_W > 1.5",
+                    "deltaPhi_SUEP_MET > 1.5",
+                    "deltaPhi_lepton_SUEP > 1.5",
+                    "ak4jets_inSUEPcluster_n_HighestPT >= 1",
+                    "deltaPhi_minDeltaPhiMETJet_MET > 0.4",
+                    "W_SUEP_BV < 2",
+                    "deltaPhi_minDeltaPhiMETJet_MET > 1.5",
+                ],
+                "new_variables": new_variables_WH,
+            },
+            "CRWJ": {
+                "input_method": "HighestPT",
+                "method_var": "SUEP_nconst_HighestPT",
+                "SR": [
+                    ["SUEP_S1_HighestPT", ">=", 0.3],
+                    ["SUEP_nconst_HighestPT", ">=", 50],
+                ],
+                "selections": [
+                    "MET_pt > 30",
+                    "W_pt > 40",
+                    "W_mt < 130",
+                    "W_mt > 30",
+                    "bjetSel == 1",
+                    "deltaPhi_SUEP_W > 1.5",
+                    "deltaPhi_SUEP_MET > 1.5",
+                    "deltaPhi_lepton_SUEP > 1.5",
+                    "ak4jets_inSUEPcluster_n_HighestPT >= 1",
+                    "W_SUEP_BV < 2",
+                    "deltaPhi_minDeltaPhiMETJet_MET > 1.5",
+                    "SUEP_S1_HighestPT < 0.3",
+                    "SUEP_nconst_HighestPT < 50",
+                ],
+                "new_variables": new_variables_WH,
+            },
+            "CRTT": {
+                "input_method": "HighestPT",
+                "method_var": "SUEP_nconst_HighestPT",
+                "SR": [
+                    ["SUEP_S1_HighestPT", ">=", 0.3],
+                    ["SUEP_nconst_HighestPT", ">=", 40],
+                ],
+                "selections": [
+                    "MET_pt > 30",
+                    "W_pt > 40",
+                    "W_mt < 130",
+                    "W_mt > 30",
+                    "bjetSel == 0",
+                    "deltaPhi_SUEP_W > 1.5",
+                    "deltaPhi_SUEP_MET > 1.5",
+                    "deltaPhi_lepton_SUEP > 1.5",
+                    "ak4jets_inSUEPcluster_n_HighestPT >= 1",
+                    "W_SUEP_BV < 2",
+                    "deltaPhi_minDeltaPhiMETJet_MET > 1.5",
+                    "SUEP_S1_HighestPT < 0.3",
+                    "SUEP_nconst_HighestPT < 50",
+                ],
+                "new_variables": new_variables_WH,
             },
         }
+
     if options.channel == "ggF":
         if options.scouting:
             config = {
                 "Cluster": {
                     "input_method": "CL",
+                    "method_var": "SUEP_S1_CL",
                     "xvar": "SUEP_S1_CL",
                     "xvar_regions": [0.3, 0.34, 0.5, 2.0],
                     "yvar": "SUEP_nconst_CL",
@@ -335,6 +654,7 @@ def main():
                 },
                 "ClusterInverted": {
                     "input_method": "CL",
+                    "method_var": "ISR_S1_CL",
                     "xvar": "ISR_S1_CL",
                     "xvar_regions": [0.3, 0.34, 0.5, 2.0],
                     "yvar": "ISR_nconst_CL",
@@ -347,12 +667,18 @@ def main():
             config = {
                 "Cluster70": {
                     "input_method": "CL",
+                    "method_var": "SUEP_S1_CL",
                     "xvar": "SUEP_S1_CL",
                     "xvar_regions": [0.3, 0.4, 0.5, 2.0],
                     "yvar": "SUEP_nconst_CL",
                     "yvar_regions": [30, 50, 70, 1000],
                     "SR": [["SUEP_S1_CL", ">=", 0.5], ["SUEP_nconst_CL", ">=", 70]],
-                    "selections": [["ht_JEC", ">", 1200], ["ntracks", ">", 0]],
+                    "selections": [
+                        ["ht_JEC", ">", 1200],
+                        ["ntracks", ">", 0],
+                        "SUEP_nconst_CL > 30",
+                        "SUEP_S1_CL > 0.3",
+                    ],
                     "new_variables": [
                         [
                             "SUEP_ISR_deltaPhi_CL",
@@ -363,6 +689,7 @@ def main():
                 },
                 "ClusterInverted": {
                     "input_method": "CL",
+                    "method_var": "ISR_S1_CL",
                     "xvar": "ISR_S1_CL",
                     "xvar_regions": [0.3, 0.4, 0.5, 2.0],
                     "yvar": "ISR_nconst_CL",
@@ -377,6 +704,7 @@ def main():
                 {
                     "GNN": {
                         "input_method": "GNN",
+                        "method_var": "SUEP_S1_GNN",
                         "xvar": "SUEP_S1_GNN",
                         "xvar_regions": [0.3, 0.4, 0.5, 1.0],
                         "yvar": "single_l5_bPfcand_S1_SUEPtracks_GNN",
@@ -396,6 +724,7 @@ def main():
                     },
                     "GNNInverted": {
                         "input_method": "GNNInverted",
+                        "method_var": "ISR_S1_GNNInverted",
                         "xvar": "ISR_S1_GNNInverted",
                         "xvar_regions": [0.0, 1.5, 2.0],
                         "yvar": "single_l5_bPfcand_S1_SUEPtracks_GNNInverted",
@@ -416,6 +745,8 @@ def main():
     nfailed = 0
     ntotal = 0
     total_gensumweight = 0
+    xsection = 1
+    lumi = 1
     output = {"labels": []}
     cutflow = {}
 
@@ -448,17 +779,23 @@ def main():
     files = [f for f in files if ".hdf5" in f]
     ntotal = len(files)
 
+    if ntotal == 0:
+        logging.error("No files found, exiting.")
+        sys.exit(1)
+
     ### Plotting loop ################################################################################################
 
     logging.info("Setup ready, filling histograms now.")
 
-    sample = None
+    sample = options.sample
     for ifile in tqdm(files):
         # get the file
         df, metadata = fill_utils.open_ntuple(
             ifile, redirector=options.redirector, xrootd=options.xrootd
         )
         logging.debug(f"Opened file {ifile}")
+        if options.printEvents:
+            print(f"Opened file {ifile}")
 
         # check if file is corrupted
         if type(df) == int:
@@ -467,13 +804,21 @@ def main():
             continue
 
         # check sample consistency
-        if "sample" in metadata.keys():
-            if sample is None:
+        if metadata != 0 and "sample" in metadata.keys():
+            if (
+                sample is None
+            ):  # we did not pass in any sample, and this is the first file
                 sample = metadata["sample"]
-            else:
+            elif (
+                metadata["sample"] == "X"
+            ):  # default option for ntuplemaker, when not run properly specifying which sample. Ignore this.
+                pass
+            else:  # if we already have a sample, check it matches the metadata of the first file or what we passed in
                 assert (
                     sample == metadata["sample"]
-                ), "This script should only run on one sample at a time."
+                ), "This script should only run on one sample at a time. Found {} in metadata, and passed sample {}".format(
+                    metadata["sample"], sample
+                )
 
         # update the gensumweight
         if options.isMC and metadata != 0:
@@ -587,62 +932,39 @@ def main():
                 out_label="GNN",
             )
 
-    # apply xsec and gensumweight (but no xsec to SUEP signal samples)
+    # store whether sample is signal
+    isSignal = (options.isMC) and (fill_utils.isSampleSignal(sample, options.era))
+    logging.debug("Is signal: " + str(isSignal))
+
+    # apply normalization to samples
     if options.isMC:
-        logging.info("Applying normalization.")
-        xsection = 1
-        if "SUEP" not in sample:
-            xsection = fill_utils.getXSection(sample, options.era)
-            logging.debug(f"Applying cross section {xsection}.")
-        logging.debug(f"Applying total_gensumweight {total_gensumweight}.")
-        output = fill_utils.apply_normalization(output, xsection / total_gensumweight)
-        cutflow = fill_utils.apply_normalization(cutflow, xsection / total_gensumweight)
+        logging.debug(f"Found total_gensumweight {total_gensumweight}.")
+        xsection = fill_utils.getXSection(sample, options.era, failOnKeyError=True)
+        logging.debug(f"Found cross section x kr x br: {xsection}.")
+        lumi = plot_utils.getLumi(options.era, options.scouting)
+        logging.debug(f"Found lumi: {lumi}.")
 
-    # Make ABCD expected histogram for signal region
-    if options.doABCD and options.predictSR:
-        logging.info("Predicting SR using ABCD method.")
+        if isSignal:
+            normalization = 1 / total_gensumweight
+        else:
+            normalization = xsection * lumi / total_gensumweight
 
-        # Loop through every configuration
-        for label_out, config_out in config.items():
-            xregions = np.array(config_out["xvar_regions"]) * 1.0j
-            yregions = np.array(config_out["yvar_regions"]) * 1.0j
-            xvar = config_out["xvar"].replace("_" + config_out["input_method"], "")
-            yvar = config_out["yvar"].replace("_" + config_out["input_method"], "")
-            hist_name = f"2D_{xvar}_vs_{yvar}_{label_out}"
-
-            # Check if histogram exists
-            if hist_name not in output.keys():
-                logging.warning(f"{hist_name} has not been created.")
-                continue
-
-            # Only calculate predicted for 9 region ABCD for now, should be made flexible based on the number of regions defined in the config
-            if (len(xregions) != 4) or (len(yregions) != 4):
-                logging.warning(
-                    f"Can only calculate SR for 9 region ABCD, skipping {label_out}"
-                )
-                continue
-
-            try:
-                # Calculate expected SR from ABCD method
-                # sum_var = 'x' corresponds to scaling F histogram
-                _, SR_exp = plot_utils.ABCD_9regions_errorProp(
-                    output[hist_name], xregions, yregions, sum_var="x"
-                )
-                output[f"I_{yvar}_{label_out}_exp"] = SR_exp
-            except ZeroDivisionError:
-                logging.warning(f"ZeroDivisionError for {label_out}, skipping.")
-                continue
+        logging.info(f"Applying normalization: {normalization}.")
+        output = fill_utils.apply_normalization(output, normalization)
+        cutflow = fill_utils.apply_normalization(cutflow, normalization)
 
     # form metadata
     metadata = {
         "ntuple_tag": options.tag,
         "analysis": options.channel,
-        "scouting": options.scouting,
-        "isMC": options.isMC,
+        "scouting": int(options.scouting),
+        "isMC": int(options.isMC),
+        "signal": int(isSignal),
         "era": options.era,
         "sample": sample,
-        "xsec": xsection,
-        "gensumweight": total_gensumweight,
+        "xsec": float(xsection),
+        "gensumweight": float(total_gensumweight),
+        "lumi": float(lumi),
         "nfiles": ntotal,
         "nfailed": nfailed,
     }
@@ -655,17 +977,24 @@ def main():
 
     ### Write output #################################################################################################
 
-    # write histograms and metadata to a root file
-    outFile = options.saveDir + "/" + sample + "_" + options.output + ".root"
-    logging.info("Saving outputs to " + outFile)
-    with uproot.recreate(outFile) as froot:
-        # write out metadata
-        for k, m in metadata.items():
-            froot[f"metadata/{k}"] = str(m)
+    # write histograms and metadata to a root or pkl file
+    outFile = options.saveDir + "/" + sample + "_" + options.output
+    if options.pkl:
+        outFile += ".pkl"
+        logging.info("Saving outputs to " + outFile)
+        with open(outFile, "wb") as f:
+            pickle.dump({"metadata": metadata, "hists": output}, f)
+    else:
+        outFile += ".root"
+        logging.info("Saving outputs to " + outFile)
+        with uproot.recreate(outFile) as froot:
+            # write out metadata
+            for k, m in metadata.items():
+                froot[f"metadata/{k}"] = str(m)
 
-        # write out histograms
-        for h, hist in output.items():
-            froot[h] = hist
+            # write out histograms
+            for h, hist in output.items():
+                froot[h] = hist
 
 
 if __name__ == "__main__":

@@ -1,12 +1,178 @@
 import awkward as ak
 import numpy as np
 import vector
-from vector._methods import LorentzMomentum, Planar
-
-from workflows.SUEP_utils import sphericity
 
 
-def selectByLeptons(self, events, extraColls=[], lepveto=False):
+def getGenModel(events):
+    """
+    Central signal samples are not split by parameters, so we need to extract the model from the input file
+    and save it in the dataframe.
+    The expected structure is {'SUEP_mS125.000_mPhi1.000_T0.250_modeleptonic': True} for each event.
+    :param events: awkward array of events
+    :return: genModel for each event, as a list.
+    """
+    if not hasattr(events, "GenModel"):
+        raise ValueError("GenModel not found in events, please check the input file.")
+    genModels = []
+    for (
+        genModelInfo
+    ) in (
+        events.GenModel
+    ):  # I can't figure out a way to do this with AwkwardArrays, so I'm doing it with two for loops, may I be forgiven
+        genModel = []
+        genModelInfo = genModelInfo.tolist()  # this actually becomes a dictionary
+        for g, v in genModelInfo.items():
+            if v:
+                genModel.append(g)
+        if len(genModel) != 1:
+            raise ValueError(f"Expected one genModel per event.")
+        genModels.append(genModel[0])
+    return genModels
+
+
+def getAK4Jets(Jets, lepton=None, isMC: bool = 1):
+    """
+    Create awkward array of jets. Applies basic selections.
+    Returns: awkward array of dimensions (events x jets x 4 momentum)
+    """
+    if isMC:
+        Jets_awk = ak.zip(
+            {
+                "pt": Jets.pt,
+                "eta": Jets.eta,
+                "phi": Jets.phi,
+                "mass": Jets.mass,
+                "btag": Jets.btagDeepFlavB,
+                "jetId": Jets.jetId,
+                "hadronFlavour": Jets.hadronFlavour,
+                "qgl": Jets.qgl,
+            },
+            with_name="Momentum4D",
+        )
+    else:
+        Jets_awk = ak.zip(
+            {
+                "pt": Jets.pt,
+                "eta": Jets.eta,
+                "phi": Jets.phi,
+                "mass": Jets.mass,
+                "btag": Jets.btagDeepFlavB,
+                "jetId": Jets.jetId,
+                "qgl": Jets.qgl,
+            },
+            with_name="Momentum4D",
+        )
+    # jet pt cut, eta cut, and jet ID
+    jet_awk_Cut = (
+        (Jets_awk.pt > 30) & (abs(Jets_awk.eta) < 2.4) & (0 < (Jets_awk.jetId & 0b010))
+    )
+    # and minimum separation from lepton
+    if lepton is not None:
+        jet_awk_Cut = jet_awk_Cut & (Jets_awk.deltaR(lepton) >= 0.4)
+    Jets_correct = Jets_awk[jet_awk_Cut]
+
+    return Jets_correct
+
+
+def getGenPart(events):
+    genParts = events.GenPart
+    genParts = ak.zip(
+        {
+            "pt": genParts.pt,
+            "eta": genParts.eta,
+            "phi": genParts.phi,
+            "mass": genParts.mass,
+            "pdgID": genParts.pdgId,
+            "status": genParts.status,
+            "genPartIdxMother": genParts.genPartIdxMother,
+            "statusFlags": genParts.statusFlags,
+        },
+        with_name="Momentum4D",
+    )
+    return genParts
+
+
+def getGenW(events):
+    """
+    Get the gen-level W boson, lastCopy (statusFlag 13)
+    """
+    genParticles = getGenPart(events)
+    genW = genParticles[
+        (abs(genParticles.pdgID) == 24) & (0 < (genParticles.statusFlags & (1 << 13)))
+    ]
+    return genW
+
+
+def getGenDarkPseudoscalars(events):
+    """
+    Get the gen-level dark pseudoscalar particles (phi's) produced by the scalar (S).
+    This depends on how you set up your signal samples. This function assumes the SUEP WH layout in e.g. https://gitlab.cern.ch/cms-exo-mci/EXO-MCsampleRequests/-/merge_requests/205/diffs
+    """
+
+    genParticles = getGenPart(events)
+    darkPseudoscalarParticles = genParticles[genParticles.pdgID == 999999]
+
+    return darkPseudoscalarParticles
+
+
+def getTracks(events, lepton=None, leptonIsolation=None):
+    Cands = ak.zip(
+        {
+            "pt": events.PFCands.trkPt,
+            "eta": events.PFCands.trkEta,
+            "phi": events.PFCands.trkPhi,
+            "mass": events.PFCands.mass,
+            # "pdgID": events.PFCands.pdgID
+        },
+        with_name="Momentum4D",
+    )
+    cut = (
+        (events.PFCands.fromPV > 1)
+        & (events.PFCands.trkPt >= 1)
+        & (abs(events.PFCands.trkEta) <= 2.5)
+        & (abs(events.PFCands.dz) < 0.05)
+        # & (events.PFCands.dzErr < 0.05)
+        & (abs(events.PFCands.d0) < 0.05)
+        & (events.PFCands.puppiWeight > 0.1)
+    )
+    Cleaned_cands = Cands[cut]
+    Cleaned_cands = ak.packed(Cleaned_cands)
+
+    # Prepare the Lost Track collection
+    LostTracks = ak.zip(
+        {
+            "pt": events.lostTracks.pt,
+            "eta": events.lostTracks.eta,
+            "phi": events.lostTracks.phi,
+            "mass": 0.0,
+        },
+        with_name="Momentum4D",
+    )
+    cut = (
+        (events.lostTracks.fromPV > 1)
+        & (events.lostTracks.pt >= 0.1)
+        & (abs(events.lostTracks.eta) <= 2.5)
+        & (abs(events.lostTracks.dz) < 0.05)
+        & (abs(events.lostTracks.d0) < 0.05)
+        # & (events.lostTracks.dzErr < 0.05)
+        & (events.lostTracks.puppiWeight > 0.1)
+    )
+    Lost_Tracks_cands = LostTracks[cut]
+    Lost_Tracks_cands = ak.packed(Lost_Tracks_cands)
+
+    # select which tracks to use in the script
+    # dimensions of tracks = events x tracks in event x 4 momenta
+    tracks = ak.concatenate([Cleaned_cands, Lost_Tracks_cands], axis=1)
+
+    if leptonIsolation:
+        # Sorting out the tracks that overlap with the lepton
+        tracks = tracks[(tracks.deltaR(lepton) >= leptonIsolation)]
+
+    return tracks, Cleaned_cands
+
+
+def getLeptons(events):
+
     ###lepton selection criteria--4momenta collection for plotting
     muons = ak.zip(
         {
@@ -26,6 +192,9 @@ def selectByLeptons(self, events, extraColls=[], lepveto=False):
             "miniIso": events.Muon.miniPFRelIso_all,
             "dxy": events.Muon.dxy,
             "dz": events.Muon.dz,
+            "charge": events.Muon.pdgId / (-13),
+            "tightId": events.Muon.tightId,
+            "pfIsoId": events.Muon.pfIsoId,
         },
         with_name="Momentum4D",
     )
@@ -48,97 +217,301 @@ def selectByLeptons(self, events, extraColls=[], lepveto=False):
             "miniIso": events.Electron.miniPFRelIso_all,
             "dxy": events.Electron.dxy,
             "dz": events.Electron.dz,
+            "charge": events.Electron.pdgId / (-11),
+            "mvaFall17V2Iso_WP80": events.Electron.mvaFall17V2Iso_WP80,
         },
         with_name="Momentum4D",
     )
 
-    ###  Some very simple selections on ID ###
-    ###  Muons: loose ID + dxy dz cuts mimicking the medium prompt ID https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2
-    ###  Electrons: loose ID + dxy dz cuts for promptness https://twiki.cern.ch/twiki/bin/view/CMS/EgammaCutBasedIdentification
-    if self.scouting == 1:
-        cutMuons = (
-            # (events.Muon.isGlobalMuon == 1 | events.Muon.isTrackerMuon == 1)
-            (events.Muon.isGlobalMuon == 1)
-            & (events.Muon.pt >= 10)
-            & (abs(events.Muon.dxy) <= 0.02)
-            & (abs(events.Muon.dz) <= 0.1)
-            & (events.Muon.trkiso < 0.10)
-            & (abs(events.Muon.eta) < 2.4)
-        )
-        cutElectrons = (
-            (events.Electron.ID == 1)
-            & (events.Electron.pt >= 15)
-            & (
-                abs(events.Electron.d0)
-                < 0.05 + 0.05 * (abs(events.Electron.eta) > 1.479)
-            )
-            & (
-                abs(events.Electron.dz)
-                < 0.10 + 0.10 * (abs(events.Electron.eta) > 1.479)
-            )
-            & ((abs(events.Electron.eta) < 1.444) | (abs(events.Electron.eta) > 1.566))
-            & (abs(events.Electron.eta) < 2.5)
+    leptons = ak.concatenate([muons, electrons], axis=1)
+
+    return muons, electrons, leptons
+
+
+def getLooseLeptons(events):
+    """
+    These leptons follow EXACTLY the ZH definitions, so that we can impose
+    orthogonality between the ZH, offline, and WH selections.
+    """
+
+    muons, electrons, leptons = getLeptons(events)
+
+    cutLooseMuons = (
+        (events.Muon.looseId)
+        & (events.Muon.pt >= 10)
+        & (abs(events.Muon.dxy) <= 0.02)
+        & (abs(events.Muon.dz) <= 0.1)
+        & (events.Muon.pfIsoId >= 2)
+        & (abs(events.Muon.eta) < 2.4)
+    )
+    cutLooseElectrons = (
+        (events.Electron.cutBased >= 2)
+        & (events.Electron.pt >= 15)
+        & (events.Electron.mvaFall17V2Iso_WP90)
+        & (abs(events.Electron.dxy) < 0.05 + 0.05 * (abs(events.Electron.eta) > 1.479))
+        & (abs(events.Electron.dz) < 0.10 + 0.10 * (abs(events.Electron.eta) > 1.479))
+        & ((abs(events.Electron.eta) < 1.444) | (abs(events.Electron.eta) > 1.566))
+        & (abs(events.Electron.eta) < 2.5)
+    )
+
+    looseMuons = muons[cutLooseMuons]
+    looseElectrons = electrons[cutLooseElectrons]
+    looseLeptons = ak.concatenate([looseMuons, looseElectrons], axis=1)
+
+    return looseMuons, looseElectrons, looseLeptons
+
+
+def getTightLeptons(events):
+    """
+    These leptons are the ones that will be used for the WH analysis.
+    """
+
+    looseMuons, looseElectrons, _ = getLooseLeptons(events)
+
+    # tighter lepton ID
+    cutTightMuons = (
+        (looseMuons.tightId)
+        & (looseMuons.pfIsoId >= 5)  # PFIsoVeryTight, aka PF rel iso < 0.1
+        & (abs(looseMuons.dz) <= 0.05)
+        & (looseMuons.pt >= 30)
+    )
+    cutTightElectrons = (looseElectrons.mvaFall17V2Iso_WP80) & (looseElectrons.pt >= 35)
+
+    tightMuons = looseMuons[cutTightMuons]
+    tightElectrons = looseElectrons[cutTightElectrons]
+    tightLeptons = ak.concatenate([tightMuons, tightElectrons], axis=1)
+
+    return tightMuons, tightElectrons, tightLeptons
+
+
+def getPhotons(events, isMC: bool = 1):
+    """
+    Get photons.
+    """
+    if isMC:
+        photons = ak.zip(
+            {
+                "pt": events.Photon.pt,
+                "eta": events.Photon.eta,
+                "phi": events.Photon.phi,
+                "mass": events.Photon.mass,
+                "pixelSeed": events.Photon.pixelSeed,
+                "electronVeto": events.Photon.electronVeto,
+                "hoe": events.Photon.hoe,
+                "r9": events.Photon.r9,
+                "mvaID": events.Photon.mvaID,
+                "pfRelIso03_all": events.Photon.pfRelIso03_all,
+                "cutBased": events.Photon.cutBased,
+                "isScEtaEB": events.Photon.isScEtaEB,
+                "isScEtaEE": events.Photon.isScEtaEE,
+                "genPartFlav ": events.Photon.genPartFlav,
+            },
+            with_name="Momentum4D",
         )
     else:
-        # "Loose" = ZH criteria, which we must impose for orthogonality
-        cutLooseMuons = (
-            (events.Muon.looseId)
-            & (events.Muon.pt >= 10)
-            & (abs(events.Muon.dxy) <= 0.02)
-            & (abs(events.Muon.dz) <= 0.1)
-            & (events.Muon.pfIsoId >= 2)
-            & (abs(events.Muon.eta) < 2.4)
-        )
-        cutLooseElectrons = (
-            (events.Electron.cutBased >= 2)
-            & (events.Electron.pt >= 15)
-            & (events.Electron.mvaFall17V2Iso_WP90)
-            & (
-                abs(events.Electron.dxy)
-                < 0.05 + 0.05 * (abs(events.Electron.eta) > 1.479)
-            )
-            & (
-                abs(events.Electron.dz)
-                < 0.10 + 0.10 * (abs(events.Electron.eta) > 1.479)
-            )
-            & ((abs(events.Electron.eta) < 1.444) | (abs(events.Electron.eta) > 1.566))
-            & (abs(events.Electron.eta) < 2.5)
+        photons = ak.zip(
+            {
+                "pt": events.Photon.pt,
+                "eta": events.Photon.eta,
+                "phi": events.Photon.phi,
+                "mass": events.Photon.mass,
+                "pixelSeed": events.Photon.pixelSeed,
+                "electronVeto": events.Photon.electronVeto,
+                "hoe": events.Photon.hoe,
+                "r9": events.Photon.r9,
+                "mvaID": events.Photon.mvaID,
+                "pfRelIso03_all": events.Photon.pfRelIso03_all,
+                "cutBased": events.Photon.cutBased,
+                "isScEtaEB": events.Photon.isScEtaEB,
+                "isScEtaEE": events.Photon.isScEtaEE,
+            },
+            with_name="Momentum4D",
         )
 
-        cutMuons = (
-            cutLooseMuons
-            & (events.Muon.tightId)
-            & (events.Muon.pfIsoId >= 5)  # PFIsoVeryTight, aka PF rel iso < 0.1
-            & (abs(events.Muon.dz) <= 0.05)
-        )
-        cutElectrons = cutLooseElectrons & (events.Electron.mvaFall17V2Iso_WP80)
-
-    ### Apply the cuts
-    # Object selection. selMuons contain only the events that are filtered by cutMuons criteria.
-    selMuons = muons[cutMuons]
-    selElectrons = electrons[cutElectrons]
-
-    cutHasOneMuon = (ak.num(selMuons, axis=1) == 1) & (
-        ak.max(selMuons.pt, axis=1, mask_identity=False) >= 30
+    cutPhotons = (
+        (events.Photon.mvaID_WP90)
+        & (abs(events.Photon.eta) <= 2.5)
+        & (events.Photon.electronVeto)
+        & (events.Photon.pt >= 15)
     )
-    cutHasOneElec = (ak.num(selElectrons, axis=1) == 1) & (
-        ak.max(selElectrons.pt, axis=1, mask_identity=False) >= 35
+
+    photons = photons[cutPhotons]
+
+    return photons
+
+
+def getTrigObj(events):
+    trigObj = ak.zip(
+        {
+            "pt": events.TrigObj.pt,
+            "eta": events.TrigObj.eta,
+            "phi": events.TrigObj.phi,
+            "filterBits": events.TrigObj.filterBits,
+        },
+        with_name="Momentum4D",
     )
-    cutOneLep = (ak.num(selElectrons, axis=1) + ak.num(selMuons, axis=1)) < 2
-    cutHasOneLep = ((cutHasOneMuon) | (cutHasOneElec)) & cutOneLep
-
-    ### Cut the events, also return the selected leptons for operation down the line
-    events = events[cutHasOneLep]
-    selElectrons = selElectrons[cutHasOneLep]
-    selMuons = selMuons[cutHasOneLep]
-
-    selLeptons = ak.concatenate([selElectrons, selMuons], axis=1)
-
-    return events, selLeptons  # , [coll[cutHasTwoLeps] for coll in extraColls]
+    return trigObj
 
 
-def MET_delta_phi(x, MET):
-    # define 4-vectors for MET (x already 4-vector)
+def genSelection(events, sample: str):
+    """
+    Gen-level selections.
+    The WJets inclusive sample needs to be cut at W gen pT of 100 GeV in order to be stitched together with the WJets pT binned samples.
+    """
+
+    if "WJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-pythia8" in sample:
+        pt = events.LHE.Vpt
+        cut = pt < 100
+        events = events[cut]
+
+    return events
+
+
+def triggerSelection(
+    events, sample: str, era: str, isMC: bool, output=None, out_label=None
+):
+    """
+    Applies trigger, returns events.
+    Trigger single muon and EGamma; optionally updates the cutflows.
+    """
+
+    # muon trigger
+    triggerSingleMuon = events.HLT.IsoMu27 | events.HLT.Mu50
+
+    # photon trigger
+    if era == "2016" or era == "2016apv":
+        triggerPhoton = events.HLT.Photon175
+    elif era == "2017" or era == "2018":
+        triggerPhoton = events.HLT.Photon200
+
+    if era == "2017" and (not isMC) and ("SingleElectron" in sample):
+        # data 2017 is special <3<3
+        # https://twiki.cern.ch/twiki/bin/view/CMS/EgHLTRunIISummary#2017
+
+        # remove events in the SingleMuon dataset
+        events = events[~triggerSingleMuon]
+        temp_trig = events.HLT.Photon200 | events.HLT.Ele115_CaloIdVT_GsfTrkIdT
+
+        # Grab events associated with electron trigger: https://cms-nanoaod-integration.web.cern.ch/integration/master-102X/mc102X_doc.html#TrigObj
+        filts = (events.TrigObj.id == 11) & ((events.TrigObj.filterBits & 1024) == 1024)
+        events = events[(ak.num(events.TrigObj[filts]) > 0) | temp_trig]
+        temp_trig = events.HLT.Photon200 | events.HLT.Ele115_CaloIdVT_GsfTrkIdT
+
+        # grab prefiltered events
+        trig_obs = getTrigObj(events)
+        muons, electrons, leptons = getLeptons(events)
+        dR = ak.Array([[] for _ in range(len(events))])
+
+        for i in range(
+            ak.max(ak.num(trig_obs))
+        ):  # only loop through the trigger objects that pass the filters
+            mask = ak.mask(trig_obs, (ak.num(trig_obs) > i))
+            dR_masked = ak.Array(electrons.deltaR(mask[:, i]))
+            dR_masked = ak.Array(x if x is not None else [] for x in dR_masked)
+            dR = ak.concatenate([dR, dR_masked], axis=-1)
+
+        # remove events that do not have a trig object within dR of 0.1 of an electron
+        dR = ak.where(ak.num(dR, axis=-1) == 0, ak.Array([[1.0]]), dR)
+        events = events[(ak.min(dR, axis=-1) < 0.1) | temp_trig]
+
+        # Do cutflow and return events
+        if output:
+            output["cutflow_triggerEGamma" + out_label] += ak.sum(events.genWeight)
+        return events
+
+    else:
+        triggerElectron = (
+            events.HLT.Ele32_WPTight_Gsf | events.HLT.Ele115_CaloIdVT_GsfTrkIdT
+        )
+    # this is just for cutflow
+    if output:
+        output["cutflow_triggerSingleMuon" + out_label] += ak.sum(
+            events[triggerSingleMuon].genWeight
+        )
+        output["cutflow_triggerEGamma" + out_label] += ak.sum(
+            events[triggerPhoton | triggerElectron].genWeight
+        )
+
+    # Apply selection on events
+    if isMC:
+        events = events[triggerElectron | triggerPhoton | triggerSingleMuon]
+    else:
+        if "SingleMuon" in sample:
+            events = events[triggerSingleMuon]
+        elif ("SingleElectron" in sample) or ("EGamma" in sample):
+            events = events[(triggerElectron | triggerPhoton) & (~triggerSingleMuon)]
+        else:
+            events = events[triggerElectron | triggerPhoton | triggerSingleMuon]
+
+    return events
+
+
+def orthogonalitySelection(events):
+    """
+    This function is used to impose orthogonality between the ZH, offline, and WH selections.
+    """
+
+    # follow ZH and offline lepton definitions
+    looseMuons, looseElectrons, _ = getLooseLeptons(events)
+
+    # offline selection
+    cutAnyElecs = (ak.num(looseElectrons, axis=1) > 0) & (
+        ak.max(looseElectrons.pt, axis=1, mask_identity=False) >= 25
+    )
+    cutAnyMuons = (ak.num(looseMuons, axis=1) > 0) & (
+        ak.max(looseMuons.pt, axis=1, mask_identity=False) >= 25
+    )
+    cutAnyLeps = cutAnyElecs | cutAnyMuons
+
+    # ZH selection
+    cutHasTwoMuons = (
+        (ak.num(looseMuons, axis=1) == 2)
+        & (ak.max(looseMuons.pt, axis=1, mask_identity=False) >= 25)
+        & (ak.sum(looseMuons.charge, axis=1) == 0)
+    )
+    cutHasTwoElecs = (
+        (ak.num(looseElectrons, axis=1) == 2)
+        & (ak.max(looseElectrons.pt, axis=1, mask_identity=False) >= 25)
+        & (ak.sum(looseElectrons.charge, axis=1) == 0)
+    )
+    cutTwoLeps = (ak.num(looseElectrons, axis=1) + ak.num(looseMuons, axis=1)) < 4
+    cutHasTwoLeps = ((cutHasTwoMuons) | (cutHasTwoElecs)) & cutTwoLeps
+
+    # apply orthogonality condition
+    events = events[cutAnyLeps & ~cutHasTwoLeps]
+
+    return events
+
+
+def qualityFiltersSelection(events, era: str):
+    ### Apply MET filter selection (see https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2)
+    if era == "2018" or era == "2017":
+        cutAnyFilter = (
+            (events.Flag.goodVertices)
+            & (events.Flag.globalSuperTightHalo2016Filter)
+            & (events.Flag.HBHENoiseFilter)
+            & (events.Flag.HBHENoiseIsoFilter)
+            & (events.Flag.EcalDeadCellTriggerPrimitiveFilter)
+            & (events.Flag.BadPFMuonFilter)
+            & (events.Flag.BadPFMuonDzFilter)
+            & (events.Flag.eeBadScFilter)
+            & (events.Flag.ecalBadCalibFilter)
+        )
+    if era == "2016" or era == "2016apv":
+        cutAnyFilter = (
+            (events.Flag.goodVertices)
+            & (events.Flag.globalSuperTightHalo2016Filter)
+            & (events.Flag.HBHENoiseFilter)
+            & (events.Flag.HBHENoiseIsoFilter)
+            & (events.Flag.EcalDeadCellTriggerPrimitiveFilter)
+            & (events.Flag.BadPFMuonFilter)
+            & (events.Flag.BadPFMuonDzFilter)
+            & (events.Flag.eeBadScFilter)
+        )
+    return events[cutAnyFilter]
+
+
+def make_MET_4v(MET):
     MET_4v = ak.zip(
         {
             "pt": MET.pt,
@@ -148,22 +521,76 @@ def MET_delta_phi(x, MET):
         },
         with_name="Momentum4D",
     )
+    return MET_4v
 
-    signed_dphi = MET_4v.deltaphi(x)
+
+def make_nu_4v(MET, pz=0):
+    make_nu_4v = ak.zip(
+        {
+            "pt": MET.pt,
+            "pz": pz,
+            "phi": MET.phi,
+            "mass": 0,
+        },
+        with_name="Momentum4D",
+    )
+    return make_nu_4v
+
+
+def MET_delta_phi(x, MET):
+    MET_4v = make_MET_4v(MET)
+    signed_dphi = x.deltaphi(MET_4v)
     abs_dphi = np.abs(signed_dphi)
     return abs_dphi
 
 
-def W_kinematics(lepton, MET):
+def projectOnTransversePlane(objects):
+    """
+    Project the objects onto the transverse plane.
+    """
+    objects_4v = ak.zip(
+        {
+            "pt": objects.pt,
+            "eta": ak.zeros_like(objects.eta),
+            "phi": objects.phi,
+            "mass": objects.mass,
+        },
+        with_name="Momentum4D",
+    )
+    return objects_4v
+
+
+def make_Wt_4v(lepton, MET):
+    """
+    Make the W boson 4-vector from lepton and MET.
+    """
+    W_4v = projectOnTransversePlane(lepton) + make_MET_4v(MET)
+    return W_4v
+
+
+def calc_W_mt(lepton, MET):
     # mT calculation -- m1 = m2 = 0, e.g. MT for W uses mass_lepton = mass_MET = 0
-    phi = MET_delta_phi(lepton, MET)
-    W_mt_2 = (
+    _deltaPhi_lepton_MET = MET_delta_phi(lepton, MET)
+    _W_mt = np.sqrt(
         2
         * np.abs(lepton.pt)
         * np.abs(MET.pt)
-        * (1 - np.cos(phi))  # from PDG review on kinematics, eq 38.61
+        * (1 - np.cos(_deltaPhi_lepton_MET))  # from PDG review on kinematics, eq 38.61
     )
-    W_mt = np.sqrt(W_mt_2)
+    return _W_mt
+
+
+##########################################################################################################################
+# The following functions are deprecated, but kept around for they might be useful in the future.
+##########################################################################################################################
+
+
+def W_kinematics(lepton, MET):
+    """
+    WARNING: deprecated.
+    Calculate W kinematics.
+    """
+    W_mt = calc_W_mt(lepton, MET)
 
     # pT calculation
     W_ptx = lepton.px + MET.px
@@ -174,122 +601,183 @@ def W_kinematics(lepton, MET):
     # phi calculation
     W_phi = np.arctan2(W_pty, W_ptx)
 
-    return W_mt[:, 0], W_pt[:, 0], W_phi[:, 0]
+    return W_mt, W_pt, W_phi
 
 
-def HighestPTMethod(
-    self,
-    events,
-    indices,
-    tracks,
-    jets,
-    clusters,
-    output,
-    out_label=None,
-):
-    #####################################################################################
-    # ---- Highest pT Jet (PT)
-    # SUEP defined as the highest pT jet
-    #####################################################################################'
+def getTopMass(lepton, MET, jets):
+    """
+    WARNING: deprecated.
+    Calculate the top mass for each event.
+    """
 
-    # choose highest pT jet
-    highpt_jet = ak.argsort(jets.pt, axis=1, ascending=False, stable=True)
-    jets_pTsorted = jets[highpt_jet]
-    clusters_pTsorted = clusters[highpt_jet]
-    SUEP_cand = jets_pTsorted[:, 0]
-    SUEP_cand_constituents = clusters_pTsorted[:, 0]
+    M_TOP = 172
 
-    # at least 2 tracks
-    singleTrackCut = ak.num(SUEP_cand_constituents) > 1
-    SUEP_cand = SUEP_cand[singleTrackCut]
-    SUEP_cand_constituents = SUEP_cand_constituents[singleTrackCut]
-    tracks = tracks[singleTrackCut]
-    indices = indices[singleTrackCut]
+    # get the W for each event (defined only in the transverse plane)
+    W = make_Wt_4v(lepton, MET)
 
-    # boost into frame of SUEP
-    boost_SUEP = ak.zip(
+    # project the jets onto the transverse plane
+    jets_T = projectOnTransversePlane(jets)
+
+    # make an awkward array of W bosons of the same shape as the jets (the same W boson in each event is repeated N times, where N = # of jets in that event)
+    Ws = ak.cartesian({"W": W, "jets_T": jets_T}).W
+
+    # make the top hypotheses by considering each combination of W and jets_T
+    topHypotheses = Ws + jets_T
+    topMassHypotheses = topHypotheses.mass
+    bestTopMassArg = ak.from_regular(
+        ak.argmin(
+            np.abs(topMassHypotheses - M_TOP), axis=1, keepdims=True, mask_identity=True
+        )
+    )
+    bestTopMass = ak.flatten(topMassHypotheses[bestTopMassArg])
+    return bestTopMass
+
+
+def getNeutrinoEz(lepton, MET, MW=80.379):
+    """
+    WARNING: deprecated.
+    Get the neutrino z component, assuming the MW.
+    """
+    Wt = make_Wt_4v(lepton, MET)
+    A = MW**2 + Wt.pt**2 - lepton.pt**2 - MET.pt**2
+    delta = np.sqrt(A**2 - 4 * (lepton.pt**2) * (MET.pt**2))
+    Ez_p = (A * lepton.pz + lepton.e * delta) / (2 * (lepton.pt**2))
+    Ez_m = (A * lepton.pz - lepton.e * delta) / (2 * (lepton.pt**2))
+    return Ez_p, Ez_m
+
+
+def make_W_4v(lepton, MET, MW=80.379):
+    """
+    WARNING: deprecated.
+    Make the W boson 4-vector from lepton and MET, assuming the MW.
+    Since the sign of the neutrino pz is not known, we have two possible W bosons.
+    """
+    nu_pz_p, nu_pz_m = getNeutrinoEz(lepton, MET, MW=MW)
+    nu_p = make_nu_4v(MET, pz=nu_pz_p)
+    nu_m = make_nu_4v(MET, pz=nu_pz_m)
+    W_4v_p = lepton + nu_p
+    W_4v_m = lepton + nu_m
+    return W_4v_p, W_4v_m
+
+
+def getCosThetaCS(lepton, MET, MW=80.379):
+    """
+    WARNING: deprecated.
+    Get the cosine of the Collins-Soper angle. Assumes the MW.
+    """
+
+    nu_pz_p, nu_pz_m = getNeutrinoEz(lepton, MET, MW=MW)
+
+    nu_p = make_nu_4v(MET, pz=nu_pz_p)
+    nu_m = make_nu_4v(MET, pz=nu_pz_m)
+
+    random_bits = np.random.randint(2, size=len(lepton))
+    nu = ak.where(random_bits, nu_p, nu_m)
+    W = lepton + nu
+
+    Pp1 = np.sqrt(2) ** -1 * (lepton.e + lepton.pz)
+    Pp2 = np.sqrt(2) ** -1 * (nu.e + nu.pz)
+    Pm1 = np.sqrt(2) ** -1 * (lepton.e - lepton.pz)
+    Pm2 = np.sqrt(2) ** -1 * (nu.e - nu.pz)
+
+    return (
+        (nu.pz / np.abs(nu.pz))
+        * 2
+        * (Pp1 * Pm2 - Pm1 * Pp2)
+        / (MW * np.sqrt(MW**2 + W.pt**2))
+    )
+
+
+def getCosThetaCS2(lepton, MET, MW=80.379):
+    """
+    WARNING: deprecated.
+    Alternative way to get the cosine of the Collins-Soper angle. Assumes the MW.
+    """
+
+    nu_pz_p, nu_pz_m = getNeutrinoEz(lepton, MET, MW=MW)
+
+    nu_p = make_nu_4v(MET, pz=nu_pz_p)
+    nu_m = make_nu_4v(MET, pz=nu_pz_m)
+
+    random_bits = np.random.randint(2, size=len(lepton))
+    nu = ak.where(random_bits, nu_p, nu_m)
+    W = lepton + nu
+
+    boost_W = ak.zip(
         {
-            "px": SUEP_cand.px * -1,
-            "py": SUEP_cand.py * -1,
-            "pz": SUEP_cand.pz * -1,
-            "mass": SUEP_cand.mass,
+            "px": -W.px,
+            "py": -W.py,
+            "pz": -W.pz,
+            "mass": W.m,
         },
         with_name="Momentum4D",
     )
 
-    # SUEP tracks for this method are defined to be the ones from the cluster
-    # that was picked to be the SUEP jet
-    SUEP_tracks_b = SUEP_cand_constituents.boost_p4(
-        boost_SUEP
-    )  ### boost the SUEP tracks to their restframe
+    boost_lepton = lepton.boost_p4(boost_W)
+    return np.cos(boost_lepton.theta)
 
-    # SUEP jet variables
-    eigs = sphericity(SUEP_tracks_b, 1.0)  # Set r=1.0 for IRC safe
-    output["vars"].loc(
-        indices, "SUEP_nconst_HighestPT" + out_label, ak.num(SUEP_tracks_b)
-    )
-    output["vars"].loc(
-        indices,
-        "SUEP_pt_avg_b_HighestPT" + out_label,
-        ak.mean(SUEP_tracks_b.pt, axis=-1),
-    )
-    output["vars"].loc(
-        indices, "SUEP_S1_HighestPT" + out_label, 1.5 * (eigs[:, 1] + eigs[:, 0])
-    )
 
-    # unboost for these
-    SUEP_tracks = SUEP_tracks_b.boost_p4(SUEP_cand)
-    output["vars"].loc(
-        indices, "SUEP_pt_avg_HighestPT" + out_label, ak.mean(SUEP_tracks.pt, axis=-1)
-    )
-    output["vars"].loc(indices, "SUEP_pt_HighestPT" + out_label, SUEP_cand.pt)
-    output["vars"].loc(indices, "SUEP_eta_HighestPT" + out_label, SUEP_cand.eta)
-    output["vars"].loc(indices, "SUEP_phi_HighestPT" + out_label, SUEP_cand.phi)
-    output["vars"].loc(indices, "SUEP_mass_HighestPT" + out_label, SUEP_cand.mass)
+def savePhotonInfo(output, events, photons, jets_jec, looseLeptons):
+    """
+    WARNING: deprecated
+    Function to save photon information in the output DataFrame.
+    """
 
-    # Calculate gen SUEP and candidate SUEP differences
-    SUEP_genEta_diff_HighestPT = (
-        output["vars"]["SUEP_eta_HighestPT" + out_label]
-        - output["vars"]["SUEP_genEta" + out_label]
-    )
-    SUEP_genPhi_diff_HighestPT = (
-        output["vars"]["SUEP_phi_HighestPT" + out_label]
-        - output["vars"]["SUEP_genPhi" + out_label]
-    )
-    SUEP_genR_diff_HighestPT = (
-        SUEP_genEta_diff_HighestPT**2 + SUEP_genPhi_diff_HighestPT**2
-    ) ** 0.5
-    output["vars"][
-        "SUEP_deltaEtaGen_HighestPT" + out_label
-    ] = SUEP_genEta_diff_HighestPT
-    output["vars"][
-        "SUEP_deltaPhiGen_HighestPT" + out_label
-    ] = SUEP_genPhi_diff_HighestPT
-    output["vars"]["SUEP_deltaRGen_HighestPT" + out_label] = SUEP_genR_diff_HighestPT
-    output["vars"].loc(
-        indices,
-        "SUEP_deltaMassGen_HighestPT" + out_label,
-        (SUEP_cand.mass - output["vars"]["SUEP_genMass" + out_label][indices]),
-    )
-    output["vars"].loc(
-        indices,
-        "SUEP_deltaPtGen_HighestPT" + out_label,
-        (SUEP_cand.pt - output["vars"]["SUEP_genPt" + out_label][indices]),
-    )
+    for i in range(2):
+        output["vars"]["photon" + str(i + 1) + "_pt"] = ak.fill_none(
+            ak.pad_none(photons.pt, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_phi"] = ak.fill_none(
+            ak.pad_none(photons.phi, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_eta"] = ak.fill_none(
+            ak.pad_none(photons.eta, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_pixelSeed"] = ak.fill_none(
+            ak.pad_none(photons.pixelSeed, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_mvaID"] = ak.fill_none(
+            ak.pad_none(photons.mvaID, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_electronVeto"] = ak.fill_none(
+            ak.pad_none(photons.electronVeto, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_hoe"] = ak.fill_none(
+            ak.pad_none(photons.hoe, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_r9"] = ak.fill_none(
+            ak.pad_none(photons.r9, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_cutBased"] = ak.fill_none(
+            ak.pad_none(photons.cutBased, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_pfRelIso03_all"] = ak.fill_none(
+            ak.pad_none(photons.pfRelIso03_all, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_isScEtaEB"] = ak.fill_none(
+            ak.pad_none(photons.isScEtaEB, i + 1, axis=1, clip=True), -999
+        )[:, i]
+        output["vars"]["photon" + str(i + 1) + "_isScEtaEE"] = ak.fill_none(
+            ak.pad_none(photons.isScEtaEE, i + 1, axis=1, clip=True), -999
+        )[:, i]
 
-    # delta phi for SUEP and MET
-    output["vars"].loc(
-        indices,
-        "deltaPhi_SUEP_CaloMET" + out_label,
-        MET_delta_phi(SUEP_cand, events[indices].CaloMET),
-    )
-    output["vars"].loc(
-        indices,
-        "deltaPhi_SUEP_PuppiMET" + out_label,
-        MET_delta_phi(SUEP_cand, events[indices].PuppiMET),
-    )
-    output["vars"].loc(
-        indices,
-        "deltaPhi_SUEP_MET" + out_label,
-        MET_delta_phi(SUEP_cand, events[indices].MET),
-    )
+        # if ith photon exist, compute deltaR with jets
+        hasIthPhoton = ak.num(photons) > i
+        indices_i = np.arange(len(events))[hasIthPhoton]
+        photon_i = photons[hasIthPhoton][:, i]
+        jets_jec_i = jets_jec[hasIthPhoton]
+        looseLeptons_i = looseLeptons[hasIthPhoton]
+        minDeltaR_ak4jet_photon_i = np.ones(len(events)) * -999
+        minDeltaR_lepton_photon_i = np.ones(len(events)) * -999
+        minDeltaR_ak4jet_photon_i[indices_i] = ak.fill_none(
+            ak.min(np.abs(jets_jec_i.deltaR(photon_i)), axis=1), -999
+        )
+        minDeltaR_lepton_photon_i[indices_i] = ak.fill_none(
+            ak.min(np.abs(looseLeptons_i.deltaR(photon_i)), axis=1), -999
+        )
+        output["vars"][
+            "minDeltaR_ak4jet_photon" + str(i + 1)
+        ] = minDeltaR_ak4jet_photon_i
+        output["vars"][
+            "minDeltaR_lepton_photon" + str(i + 1)
+        ] = minDeltaR_lepton_photon_i

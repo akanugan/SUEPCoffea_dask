@@ -10,9 +10,7 @@ from workflows.utils import pandas_utils
 
 
 def form_ntuple(options, output):
-    df = pandas_utils.format_dataframe(
-        output["out"][options.dataset]["vars"].value, reducePrecision=True
-    )
+    df = pandas_utils.format_dataframe(output["out"][options.dataset]["vars"].value)
     return df
 
 
@@ -42,27 +40,34 @@ def main():
     parser.add_argument("--era", type=str, default="2018", help="")
     parser.add_argument("--doSyst", type=int, default=1, help="")
     parser.add_argument("--infile", required=True, type=str, default=None, help="")
+    parser.add_argument(
+        "--output",
+        "-o",
+        default="out.hdf5",
+        help="Output file, can be a path or xrootd path.",
+        type=str,
+    )
     parser.add_argument("--dataset", type=str, default="X", help="")
     parser.add_argument("--maxChunks", type=int, default=None, help="")
     parser.add_argument("--chunkSize", type=int, default=100000, help="")
-    parser.add_argument("--doInf", type=str, default=-1, help="")
+    parser.add_argument(
+        "--doInf",
+        type=str,
+        default=None,
+        help="Only added for compatibility with kraken_run.py",
+    )
     options = parser.parse_args()
 
-    out_dir = os.getcwd()
     modules_era = []
 
     modules_era.append(
         SUEP_coffea_WH.SUEP_cluster_WH(
             isMC=options.isMC,
             era=str(options.era),
-            scouting=0,
             do_syst=options.doSyst,
-            syst_var="",
             sample=options.dataset,
-            weight_syst="",
             flag=False,
-            output_location=out_dir,
-            accum="pandas_merger",
+            output_location=os.getcwd(),
         )
     )
 
@@ -87,7 +92,9 @@ def main():
         # save output
         df = form_ntuple(options, output)
         metadata = form_metadata(options, output)
-        pandas_utils.save_dfs(instance, [df], ["vars"], "out.hdf5", metadata=metadata)
+        pandas_utils.save_dfs(
+            instance, [df], ["vars"], options.output, metadata=metadata
+        )
 
 
 if __name__ == "__main__":
