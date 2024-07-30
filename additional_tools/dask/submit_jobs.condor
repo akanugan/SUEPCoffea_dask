@@ -1,0 +1,12 @@
+Universe   = vanilla
+request_disk          = 2GB
+request_memory        = 5GB
+executable = run_job.sh
+Arguments  = $(X509_USER_PROXY) $(root_file)
+Log        = logs/job_$(Cluster)_$(Process).log
+Output     = logs/job_$(Cluster)_$(Process).out
+Error      = logs/job_$(Cluster)_$(Process).err
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = calc_eff_condor, run_job.sh
+queue root_file from data18A_PFComm_copy.txt

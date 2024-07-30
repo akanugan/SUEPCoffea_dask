@@ -1,0 +1,11 @@
+universe = vanilla
+executable = python
+arguments = additional_tools/dask/calc_HLT_efficiency.py $(input_file)
+input = /dev/null
+output = output_$(input_file).out
+error = error_$(input_file).err
+log = log_$(input_file).log
+request_cpus = 1
+request_memory = 2 GB
+input_files = $(shell cat test.txt)
+queue input_file from input_files

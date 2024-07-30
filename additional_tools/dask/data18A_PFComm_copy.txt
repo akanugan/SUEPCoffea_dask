@@ -1,0 +1,4 @@
+root://xrootd.cmsaf.mit.edu//store//user/paus/nanosc/E08/ScoutingPFCommissioning+Run2018A-v1+RAW/00213724-234E-E811-8A84-FA163E1524DA.root
+root://xrootd.cmsaf.mit.edu//store//user/paus/nanosc/E08/ScoutingPFCommissioning+Run2018A-v1+RAW/00428521-FC53-E811-9246-FA163EB54123.root
+root://xrootd.cmsaf.mit.edu//store//user/paus/nanosc/E08/ScoutingPFCommissioning+Run2018A-v1+RAW/008CF390-FC49-E811-83F0-FA163E014A3A.root
+root://xrootd.cmsaf.mit.edu//store//user/paus/nanosc/E08/ScoutingPFCommissioning+Run2018A-v1+RAW/00B52222-3F64-E811-961B-FA163E166FD3.root
