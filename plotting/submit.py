@@ -31,9 +31,9 @@ slurm_script_template = """#!/bin/bash
 #SBATCH --job-name={sample}
 #SBATCH --output={log_dir}{sample}.out
 #SBATCH --error={log_dir}{sample}.err
-#SBATCH --time=02:00:00
+#SBATCH --time=14:00:00
 #SBATCH --mem=2GB
-#SBATCH --partition=submit-gpu
+#SBATCH --partition=submit
 
 source ~/.bashrc
 export X509_USER_PROXY=/home/submit/{user}/{proxy} 
