@@ -66,33 +66,60 @@ def make_selection(df, variable, operator, value, apply=True):
     whether a list of booleans is returned matching the indices that
     passed and failed the selection.
     """
+    # if operator in ["greater than", "gt", ">"]:
+    #     if apply:
+    #         return df.loc[(df[variable] > value)]
+    #     else:
+    #         return df[variable] > value
+    # if operator in ["greater than or equal to", ">="]:
+    #     if apply:
+    #         return df.loc[(df[variable] >= value)]
+    #     else:
+    #         return df[variable] >= value
+    # elif operator in ["less than", "lt", "<"]:
+    #     if apply:
+    #         return df.loc[(df[variable] < value)]
+    #     else:
+    #         return df[variable] < value
+    # elif operator in ["less than or equal to", "<="]:
+    #     if apply:
+    #         return df.loc[(df[variable] <= value)]
+    #     else:
+    #         return df[variable] <= value
+    # elif operator in ["equal to", "eq", "=="]:
+    #     if apply:
+    #         return df.loc[(df[variable] == value)]
+    #     else:
+    #         return df[variable] == value
+    # else:
+    #     sys.exit("Couldn't find operator requested " + operator)
+
+    # in order to choose a OR combination for L1s
+    if variable == "L1scoutSingle/L1scoutDouble":
+        condition = (df['L1scoutSingle'] > 0) | (df['L1scoutDouble'] > 0)
+        if apply:
+            return df.loc[condition]
+        else:
+            return condition
+
+    # cleaned some code
     if operator in ["greater than", "gt", ">"]:
-        if apply:
-            return df.loc[(df[variable] > value)]
-        else:
-            return df[variable] > value
-    if operator in ["greater than or equal to", ">="]:
-        if apply:
-            return df.loc[(df[variable] >= value)]
-        else:
-            return df[variable] >= value
+        condition = df[variable] > value
+    elif operator in ["greater than or equal to", "gte", ">="]:
+        condition = df[variable] >= value
     elif operator in ["less than", "lt", "<"]:
-        if apply:
-            return df.loc[(df[variable] < value)]
-        else:
-            return df[variable] < value
-    elif operator in ["less than or equal to", "<="]:
-        if apply:
-            return df.loc[(df[variable] <= value)]
-        else:
-            return df[variable] <= value
+        condition = df[variable] < value
+    elif operator in ["less than or equal to", "lte", "<="]:
+        condition = df[variable] <= value
     elif operator in ["equal to", "eq", "=="]:
-        if apply:
-            return df.loc[(df[variable] == value)]
-        else:
-            return df[variable] == value
+        condition = df[variable] == value
     else:
         sys.exit("Couldn't find operator requested " + operator)
+
+    if apply:
+        return df.loc[condition]
+    else:
+        return condition
 
 
 def apply_scaling_weights(
