@@ -33,32 +33,32 @@ public:
 
     }
 
-    bool selectByL1(const std::vector<float>* Jet_pt, const std::vector<float>* Jet_eta, const std::vector<float>* Jet_phi, const std::vector<float>* Jet_m) {
-        bool cutSingleJet = false;
-        int countDoubleJet = 0;
-        for (size_t i = 0; i < Jet_pt->size(); ++i) {
-            if ((*Jet_pt)[i] > 250) cutSingleJet = true;
-            if ((*Jet_pt)[i] > 50 && std::abs((*Jet_eta)[i]) < 2.5) countDoubleJet++;
-        }
+    // bool selectByL1(const std::vector<float>* Jet_pt, const std::vector<float>* Jet_eta, const std::vector<float>* Jet_phi, const std::vector<float>* Jet_m) {
+    //     bool cutSingleJet = false;
+    //     int countDoubleJet = 0;
+    //     for (size_t i = 0; i < Jet_pt->size(); ++i) {
+    //         if ((*Jet_pt)[i] > 250) cutSingleJet = true;
+    //         if ((*Jet_pt)[i] > 50 && std::abs((*Jet_eta)[i]) < 2.5) countDoubleJet++;
+    //     }
 
-        if (cutSingleJet && countDoubleJet > 1) {
-            for (size_t i = 0; i < Jet_pt->size(); ++i) {
-                for (size_t j = i + 1; j < Jet_pt->size(); ++j) {
-                    if (std::abs((*Jet_eta)[i] - (*Jet_eta)[j]) < 1.5) {
-                        double p1 = std::sqrt(std::pow((*Jet_m)[i], 2) + std::pow(std::cosh((*Jet_eta)[i]) * (*Jet_pt)[i], 2));
-                        double p2 = std::sqrt(std::pow((*Jet_m)[j], 2) + std::pow(std::cosh((*Jet_eta)[j]) * (*Jet_pt)[j], 2));
-                        double kinematic = std::sqrt(std::pow(p1 + p2, 2) - std::pow((*Jet_pt)[i] * std::sin((*Jet_phi)[i]) + (*Jet_pt)[j] * std::sin((*Jet_phi)[j]), 2)
-                            - std::pow((*Jet_pt)[i] * std::cos((*Jet_phi)[i]) + (*Jet_pt)[j] * std::cos((*Jet_phi)[j]), 2)
-                            - std::pow(std::sinh((*Jet_eta)[i]) * (*Jet_pt)[i] + std::sinh((*Jet_eta)[j]) * (*Jet_pt)[j], 2));
-                        if (kinematic > 420) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
+    //     if (cutSingleJet && countDoubleJet > 1) {
+    //         for (size_t i = 0; i < Jet_pt->size(); ++i) {
+    //             for (size_t j = i + 1; j < Jet_pt->size(); ++j) {
+    //                 if (std::abs((*Jet_eta)[i] - (*Jet_eta)[j]) < 1.5) {
+    //                     double p1 = std::sqrt(std::pow((*Jet_m)[i], 2) + std::pow(std::cosh((*Jet_eta)[i]) * (*Jet_pt)[i], 2));
+    //                     double p2 = std::sqrt(std::pow((*Jet_m)[j], 2) + std::pow(std::cosh((*Jet_eta)[j]) * (*Jet_pt)[j], 2));
+    //                     double kinematic = std::sqrt(std::pow(p1 + p2, 2) - std::pow((*Jet_pt)[i] * std::sin((*Jet_phi)[i]) + (*Jet_pt)[j] * std::sin((*Jet_phi)[j]), 2)
+    //                         - std::pow((*Jet_pt)[i] * std::cos((*Jet_phi)[i]) + (*Jet_pt)[j] * std::cos((*Jet_phi)[j]), 2)
+    //                         - std::pow(std::sinh((*Jet_eta)[i]) * (*Jet_pt)[i] + std::sinh((*Jet_eta)[j]) * (*Jet_pt)[j], 2));
+    //                     if (kinematic > 420) {
+    //                         return true;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return false;
+    // }
 
     bool cutSingleJet(const std::vector<float>* Jet_pt) {
         for (size_t i = 0; i < Jet_pt->size(); ++i) {
